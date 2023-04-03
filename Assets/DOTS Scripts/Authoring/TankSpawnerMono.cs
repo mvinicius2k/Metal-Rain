@@ -59,6 +59,12 @@ public class TankSpawnerMonoBaker : Baker<TankSpawnerMono>
             Team = authoring.Team,
         });
 
+        //if(authoring.Team == Team.Green)
+        //    AddComponent(entity, new GreenTeamTag());
+        //else
+        //    AddComponent(entity, new RedTeamTag());
+        Debug.Log("Cozido");
+
     }
 }
 

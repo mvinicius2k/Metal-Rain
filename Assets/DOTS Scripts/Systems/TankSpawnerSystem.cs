@@ -10,7 +10,7 @@ using Unity.Transforms;
 using UnityEditor;
 using UnityEngine;
 
-[BurstCompile, UpdateInGroup(typeof(InitializationSystemGroup))]
+[BurstCompile]
 public partial struct TankSpawnerSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
@@ -21,14 +21,16 @@ public partial struct TankSpawnerSystem : ISystem
     {
         if (Input.GetKeyDown(KeyCode.G) || Input.GetKeyDown(KeyCode.R)) //tecla G ou R spawna os tanks
         {
+
             //Obtendo pontos para spwawnar os tanks
-            var singleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
+            var singleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
             var ecb = singleton.CreateCommandBuffer(state.WorldUnmanaged);
 
             var teamToSpawn = Team.Green;
             if (Input.GetKeyDown(KeyCode.R))
                 teamToSpawn = Team.Red;
 
+            
             new TankSpawnerPointsJob
             {
                 Team = teamToSpawn,
@@ -37,12 +39,12 @@ public partial struct TankSpawnerSystem : ISystem
             Debug.Log("Spawnando verde");
         }
     }
+
 }
 
 [BurstCompile]
 public partial struct TankSpawnerPointsJob : IJobEntity
 {
-    
     public EntityCommandBuffer.ParallelWriter Ecb;
     public Team Team;
     public void Execute([ChunkIndexInQuery] int sortKey, TankSpawnerAspect spawnerAspect)
@@ -73,12 +75,14 @@ public partial struct TankSpawnerPointsJob : IJobEntity
                 Scale = 1f
 
             });
+            if (spawnerAspect.Spawner.ValueRO.Team == Team.Green)
+                Ecb.AddComponent(sortKey, newTank, new GreenTeamTag());
+            else
+                Ecb.AddComponent(sortKey, newTank, new RedTeamTag());
 
             Debug.Log($"index {count} = {position}");
         }
 
     }
-
-   
 }
 
