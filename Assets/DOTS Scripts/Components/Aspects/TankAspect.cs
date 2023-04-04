@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEditor.VersionControl;
 
 public readonly partial struct TankAspect : IAspect
 {
@@ -13,15 +14,17 @@ public readonly partial struct TankAspect : IAspect
     public readonly RefRW<TankProperties> Properties;
     public readonly RefRW<LocalTransform> LocalTransform;
     public readonly RefRW<LocalToWorld> LocalToWorld;
-    //[Optional]
-    //public readonly RefRO<GreenTeamTag> GreenTeamTag;
-    //[Optional]
-    //public readonly RefRO<RedTeamTag> RedTeamTag;
+    [Optional]
+    public readonly RefRO<GreenTeamTag> GreenTeamTag;
+    [Optional]
+    public readonly RefRO<RedTeamTag> RedTeamTag;
     public bool AimLocked
     { 
         get => Properties.ValueRO.Locked;
         set => Properties.ValueRW.Locked = value; 
     }
+
+    public Team Team => GreenTeamTag.IsValid ? Team.Green : Team.Red;
 
         
     /// <summary>
@@ -41,6 +44,14 @@ public readonly partial struct TankAspect : IAspect
         //        LocalTransform.ValueRW.RotateY(radians);
         //return radians * (180f / math.PI);
         return radians;
+        
+    }
+
+    public void SetAimTo(float3 target)
+    {
+        //Debug.Log($"Setando mira para {target}");
+        var yAngle = GetYRotation(target);
+        LocalTransform.ValueRW.Rotation = quaternion.EulerXYZ(0f, yAngle, 0f);
         
     }
 }

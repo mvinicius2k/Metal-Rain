@@ -12,7 +12,6 @@ using UnityEngine;
 [BurstCompile]
 public partial struct RadarSystem : ISystem
 {
-    
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
@@ -22,26 +21,24 @@ public partial struct RadarSystem : ISystem
         {
 
 
-            Debug.Log("Mirando");
-            //var redTanks = SystemAPI.Query<TankAspect, RedTeamTag>();
-
-            //var greenTanks = SystemAPI.QueryBuilder().WithAll<TankAspect, GreenTeamTag>().Build().ToEntityArray(Allocator.Temp);
-            //NativeList<float3> redPositions = new NativeList<float3>(Allocator.TempJob);
-            var query = new EntityQueryBuilder(Allocator.Temp)
-                .WithAll<TankProperties, LocalToWorld, RedTeamTag>()
-                .Build(ref state);
-            var redPositions = query.ToComponentDataArray<LocalToWorld>(Allocator.Temp);
-            var redTanks = query.ToEntityArray(Allocator.TempJob);
+            var redTanksQuery = new EntityQueryBuilder(Allocator.Temp)
+                 .WithAll<TankProperties, LocalToWorld, RedTeamTag>()
+                 .Build(ref state);
+            var greenTanksQuery = new EntityQueryBuilder(Allocator.Temp)
+                 .WithAll<TankProperties, LocalToWorld, GreenTeamTag>()
+                 .Build(ref state);
 
             var singleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
             var ecb = singleton.CreateCommandBuffer(state.WorldUnmanaged);
             
             new TankAimJob
             {
-                RedTanksPositions = new NativeArray<LocalToWorld>(redPositions, Allocator.TempJob),
-                RedTanks = new NativeArray<Entity>(redTanks, Allocator.TempJob),
+                RedTanksPositions = redTanksQuery.ToComponentDataArray<LocalToWorld>(Allocator.TempJob),
+                RedTanks = redTanksQuery.ToEntityArray(Allocator.TempJob),
+                GreenTanks = greenTanksQuery.ToEntityArray(Allocator.TempJob),
+                GreenTanksPositions = greenTanksQuery.ToComponentDataArray<LocalToWorld>(Allocator.TempJob),
                 Ecb = ecb.AsParallelWriter(),
-                Random = new Unity.Mathematics.Random(50)
+                Random = new Unity.Mathematics.Random(50),
                 
 
             }.ScheduleParallel();
@@ -57,34 +54,46 @@ public partial struct RadarSystem : ISystem
 [BurstCompile]
 public partial struct TankAimJob : IJobEntity
 {
-    //public QueryEnumerable<TankAspect, GreenTeamTag> GreenTanks;//
     [ReadOnly]
-    public NativeArray<LocalToWorld> RedTanksPositions;
+    public NativeArray<LocalToWorld> RedTanksPositions, GreenTanksPositions;
     [ReadOnly]
-    public NativeArray<Entity> RedTanks;
+    public NativeArray<Entity> RedTanks, GreenTanks;
     public EntityCommandBuffer.ParallelWriter Ecb;
+
     public Unity.Mathematics.Random Random;
     [BurstCompile]
-    public void Execute(TankAspect tank, GreenTeamTag tag, [ChunkIndexInQuery]int sortkey)
+    public void Execute(TankAspect tank, [ChunkIndexInQuery]int sortkey)
     {
         if (!tank.AimLocked)
         {
-            var selectedIndex = Random.NextInt(0, RedTanksPositions.Length);
-
-            var tankSelected = RedTanksPositions[selectedIndex];
-
-            var target = tankSelected.Position;
-            Debug.Log($"Setando mira para {target}");
-            var yAngle = tank.GetYRotation(target);
-            var newTransform = new LocalTransform
+            Entity selectedTank;
+            LocalToWorld selectedTarget;
+            if (tank.Team == Team.Red)
             {
-                Position = tank.LocalTransform.ValueRO.Position,
-                Scale = 1f,
-                Rotation = quaternion.EulerXYZ(0f, yAngle, 0f)
-            };
-            Ecb.SetComponent(sortkey, tank.Entity, newTransform);
+                var randomIndex = Random.NextInt(0, GreenTanks.Length);
+                selectedTarget = GreenTanksPositions[randomIndex];
+                selectedTank = GreenTanks[randomIndex];
+            }
+            else
+            {
+                var randomIndex = Random.NextInt(0, RedTanks.Length);
+                selectedTarget = RedTanksPositions[randomIndex];
+                selectedTank = RedTanks[randomIndex];
+            }
+
+            tank.SetAimTo(selectedTarget.Position);
+            //var target = tankSelected.Position;
+            //Debug.Log($"Setando mira para {target}");
+            //var yAngle = tank.GetYRotation(target);
+            //var newTransform = new LocalTransform
+            //{
+            //    Position = tank.LocalTransform.ValueRO.Position,
+            //    Scale = 1f,
+            //    Rotation = quaternion.EulerXYZ(0f, yAngle, 0f)
+            //};
+            //Ecb.SetComponent(sortkey, tank.Entity, newTransform);
             
-            var buffer = Ecb.AddBuffer<ApplyDamage>(sortkey, RedTanks[selectedIndex]);
+            var buffer = Ecb.AddBuffer<ApplyDamage>(sortkey, selectedTank);
             buffer.Add(new ApplyDamage
             {
                 From = tank.Entity,
@@ -93,7 +102,7 @@ public partial struct TankAimJob : IJobEntity
             });
 
             var rechargeDuration = tank.Properties.ValueRO.Blob.Value.Delay;
-            Ecb.AddComponent(sortkey, RedTanks[selectedIndex], new ApplyDamageTimer
+            Ecb.AddComponent(sortkey, selectedTank, new ApplyDamageTimer
             {
                 Value = Random.NextFloat(0f, rechargeDuration)
             }) ;
