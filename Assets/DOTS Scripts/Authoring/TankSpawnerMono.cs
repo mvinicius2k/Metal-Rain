@@ -58,7 +58,7 @@ public class TankSpawnerMonoBaker : Baker<TankSpawnerMono>
             ChosenTank = GetEntity(authoring.ChosenTank, TransformUsageFlags.Dynamic),
             Team = authoring.Team,
         });
-
+        
         //if(authoring.Team == Team.Green)
         //    AddComponent(entity, new GreenTeamTag());
         //else

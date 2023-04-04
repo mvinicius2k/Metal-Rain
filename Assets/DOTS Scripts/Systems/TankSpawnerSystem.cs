@@ -80,7 +80,6 @@ public partial struct TankSpawnerPointsJob : IJobEntity
             else
                 Ecb.AddComponent(sortKey, newTank, new RedTeamTag());
 
-            Debug.Log($"index {count} = {position}");
         }
 
     }

@@ -14,6 +14,7 @@ public class TankPropertiesMono : MonoBehaviour
     public float Cadence;
     public string Name;
     public GameObject Prefab;
+    
 }
 
 public class TankStatsBlobAssetBaker : Baker<TankPropertiesMono>
@@ -40,11 +41,14 @@ public class TankStatsBlobAssetBaker : Baker<TankPropertiesMono>
             Blob = reference,
             Prefab = GetEntity(authoring.Prefab, TransformUsageFlags.Dynamic),
             CurrentLife = data.MaxLife,
-            Timer = 0f,
             AimTo = math.forward()
         });
+        AddSharedComponent(entity, new TankRandom
+        {
+            Value = new Unity.Mathematics.Random(50)
+        });
 
-       
+
 
     }
 }

@@ -12,7 +12,6 @@ public struct TankProperties : IComponentData
     public Entity Prefab;
     public float3 AimTo;
     public float CurrentLife;
-    public float Timer;
     public bool Locked;
 }
 
@@ -26,4 +25,5 @@ public struct TankStatsData
     public float Damage;
     public float Cadence;
     public BlobString Name;
+    public float Delay => 1f / Cadence;
 }

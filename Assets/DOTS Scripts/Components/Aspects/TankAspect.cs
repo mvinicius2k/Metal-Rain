@@ -22,17 +22,25 @@ public readonly partial struct TankAspect : IAspect
         get => Properties.ValueRO.Locked;
         set => Properties.ValueRW.Locked = value; 
     }
-        
 
-    public void SetAimTo(float3 target)
+        
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="target"></param>
+    /// <returns>Em radianos</returns>
+    public float GetYRotation(float3 target)
     {
         Properties.ValueRW.AimTo = target;
         Properties.ValueRW.Locked = true;
 
-        var frontTank = LocalTransform.ValueRO.Forward();
-        var res = frontTank - target;
+        var position = LocalToWorld.ValueRO.Position;
+        var res = position - target;
         var normalized = math.normalize(res.ToXZ());
         var radians = math.atan2(normalized.x, normalized.y);
-        LocalTransform.ValueRW.RotateY(radians);
+        //        LocalTransform.ValueRW.RotateY(radians);
+        //return radians * (180f / math.PI);
+        return radians;
+        
     }
 }
