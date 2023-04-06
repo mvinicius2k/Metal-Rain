@@ -12,7 +12,10 @@ using UnityEngine;
 [BurstCompile]
 public partial struct RadarSystem : ISystem
 {
-
+    public void OnCreate(ref SystemState state)
+    {
+        state.RequireForUpdate<TankProperties>();
+    }
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {

@@ -70,6 +70,8 @@
     <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.0-pre.65\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.JobEntityGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\OOD Scripts\SpawnField_MB.cs" />
+    <Compile Include="Assets\OOD Scripts\Tank_MB.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\TankPropertiesMono.cs" />
     <Compile Include="Assets\Common Scripts\Extensions.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankRandom.cs" />
@@ -79,10 +81,12 @@
     <Compile Include="Assets\DOTS Scripts\Authoring\TankSpawnerMono.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\ApplyDamage.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\RadarSystem.cs" />
+    <Compile Include="Assets\OOD Scripts\Aim_MB.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankProperties.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\TankSpawnerSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\ApplyDamageAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankSpawner.cs" />
+    <Compile Include="Assets\OOD Scripts\TankStats_SO.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TankAspect.cs" />
   </ItemGroup>
   <ItemGroup>
