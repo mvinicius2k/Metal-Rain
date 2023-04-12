@@ -45,6 +45,8 @@ public class SpawnField_MB : MonoBehaviour
                     tanks.Add(newTank);
                 }
             }
+
+            StaticBatchingUtility.Combine(gameObject);
         }
     }
 

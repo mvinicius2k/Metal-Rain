@@ -6,7 +6,37 @@ labels:
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Body
+    second: {fileID: 2100000, guid: fb299f98e4f3c224cb6050158b1ab90a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: back-lights-glass
+    second: {fileID: 2100000, guid: b63a69c092821fa4cbb7098283058574, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: front-lights-glass
+    second: {fileID: 2100000, guid: 5cfc18219c058c142809e1da0bb645c8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lens_
+    second: {fileID: 2100000, guid: ef151aac7f7eed445b83417518db696a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lights
+    second: {fileID: 2100000, guid: b00ae30d85095714385b2d51d452d713, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mini guns hole color
+    second: {fileID: 2100000, guid: 37e2c32b7e3d07c4b89c6c97db48e7e9, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -35,7 +65,7 @@ ModelImporter:
     extraExposedTransformPaths: []
     extraUserProperties: []
     clipAnimations: []
-    isReadable: 0
+    isReadable: 1
   meshes:
     lODScreenPercentages: []
     globalScale: 1
