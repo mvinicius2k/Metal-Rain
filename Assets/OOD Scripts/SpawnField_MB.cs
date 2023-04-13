@@ -46,7 +46,7 @@ public class SpawnField_MB : MonoBehaviour
                 }
             }
 
-            StaticBatchingUtility.Combine(gameObject);
+            //StaticBatchingUtility.Combine(gameObject);
         }
     }
 
