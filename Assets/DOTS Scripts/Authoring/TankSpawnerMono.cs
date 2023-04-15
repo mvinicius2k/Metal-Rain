@@ -9,11 +9,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum Team
-{
-    Green, Red
-}
-
 public class TankSpawnerMono : MonoBehaviour
 {
     

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Unity.Jobs;
+using Unity.Services.Analytics;
 using UnityEngine;
 
 public class SpawnField_MB : MonoBehaviour
@@ -11,25 +13,34 @@ public class SpawnField_MB : MonoBehaviour
     public Color GizmosColor;
     public KeyCode KeyToSpawn;
     public SpawnField_MB EnemyField;
+    public Team Team;
 
     private List<GameObject> tanks;
-
+    private Stopwatch stopwatch;
     private int xLimit, zLimit;
-
+    public  string TeamName => Team.GetName(typeof(Team), Team);
     public List<GameObject> Tanks { get => tanks; }
+    
 
-    private void Start()
+    private void Awake()
     {
+
+        stopwatch = new Stopwatch();
         xLimit = Mathf.RoundToInt(Mathf.Abs((StartAt.x - EndAt.x)) / BlockSize.x);
         zLimit = Mathf.RoundToInt(Mathf.Abs((StartAt.y - EndAt.y)) / BlockSize.y);
         tanks = new List<GameObject>(xLimit * zLimit);
+        
     }
+
+    
 
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyToSpawn))
         {
+            var teamName = TeamName;
+            stopwatch.Start();
             for (int i = 0; i < xLimit; i++)
             {
                 for (int z = 0; z < zLimit; z++)
@@ -45,8 +56,21 @@ public class SpawnField_MB : MonoBehaviour
                     tanks.Add(newTank);
                 }
             }
+            stopwatch.Stop();
 
-            //StaticBatchingUtility.Combine(gameObject);
+            if (AnaliticsSetup.Instance == null) //Analitics desativado
+                return;
+
+            var eventParams = new TankSpawnFieldModel
+            {
+                elapsedTimeMs = (int)stopwatch.ElapsedMilliseconds,
+                tanksCount = tanks.Count,
+                team = teamName,
+                DOTS = false
+            };
+
+            AnalyticsService.Instance.CustomData(TankSpawnFieldModel.EventName, eventParams.GetEventParams());
+            AnalyticsService.Instance.Flush();
         }
     }
 

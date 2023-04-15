@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,8 +10,14 @@ public class Tank_MB : MonoBehaviour
     public TankStats_SO Stats;
     public Aim_MB Aim;
     public float CurrentLife;
-    private float timerShot;
 
+    private float timerShot;
+    private Stopwatch stopwatch;
+
+    private void Awake()
+    {
+        
+    }
     private void Start()
     {
         
