@@ -74,6 +74,7 @@
     <Compile Include="Assets\OOD Scripts\SpawnField_MB.cs" />
     <Compile Include="Assets\OOD Scripts\Tank_MB.cs" />
     <Compile Include="Assets\Common Scripts\Constants.cs" />
+    <Compile Include="Assets\DOTS Scripts\Authoring\CameraSingleton.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\TankPropertiesMono.cs" />
     <Compile Include="Assets\Common Scripts\Extensions.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankRandom.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Assets\DOTS Scripts\Systems\TankSpawnerSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\ApplyDamageAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankSpawner.cs" />
+    <Compile Include="Assets\DOTS Scripts\Systems\CameraControllerSystem.cs" />
     <Compile Include="Assets\OOD Scripts\TankStats_SO.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TankAspect.cs" />
   </ItemGroup>
