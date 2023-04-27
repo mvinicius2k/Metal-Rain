@@ -1,9 +1,11 @@
-﻿using Unity.Burst;
+﻿using System.Linq;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
 [BurstCompile]
+[UpdateAfter(typeof(RadarSystem))]
 public partial struct DamageSystem : ISystem
 {
 
@@ -37,22 +39,36 @@ public partial struct ApplyDamageJob : IJobEntity
     public EntityCommandBuffer.ParallelWriter Ecb;
     public void Execute(ApplyDamageAspect aspect, [ChunkIndexInQuery] int sortkey)
     {
+        var damageSourcesCount = aspect.ApplyDamage.Length;
 
-        for (int i = 0; i < aspect.ApplyDamage.Length; i++)
+        for (int i = 0; i < damageSourcesCount; i++)
         {
-            if (aspect.Timer.ValueRO.Value <= 0) //Hora de atirar
+            
+
+            if (aspect.Timer <= 0) //Hora de atirar
             {
                 var damage = aspect.ApplyDamage[i].Damage;
-                var rechargeDuration = aspect.Properties.ValueRO.Blob.Value.Delay;
+                
                 aspect.Properties.ValueRW.CurrentLife -= damage;
-                aspect.Timer.ValueRW.Value = rechargeDuration;
+                aspect.RestartTimer();
                 Debug.Log($"Novo {aspect.Properties.ValueRO.CurrentLife}");
 
                 if (aspect.Properties.ValueRO.CurrentLife <= 0f)
+                {
+                    var damageSources = new NativeArray<Entity>(damageSourcesCount, Allocator.Temp);
+                    for (int d = 0; d < damageSourcesCount; d++)
+                        Ecb.SetComponentEnabled<TankAimFreeTag>(sortkey,aspect.ApplyDamage[i].From, true);
+                  
+                    //Debug.Log($"Deletando {aspect.Entity} atacada pelos {damageSources}");
+                    
+
                     Ecb.DestroyEntity(sortkey, aspect.Entity);
+                    return;
+                    
+                }
             }
             else
-                aspect.Timer.ValueRW.Value -= DeltaTime;
+                aspect.Timer -= DeltaTime;
             
             
         }

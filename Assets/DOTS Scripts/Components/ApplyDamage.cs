@@ -13,6 +13,12 @@ public struct ApplyDamage : IBufferElementData
 
 }
 
+public struct Attack : IComponentData
+{
+    public Entity Target;
+    public float Timer;
+}
+
 public struct ApplyDamageTimer : IComponentData
 {
     public float Value;

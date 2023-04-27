@@ -14,15 +14,17 @@ public readonly partial struct TankAspect : IAspect
     public readonly RefRW<TankProperties> Properties;
     public readonly RefRW<LocalTransform> LocalTransform;
     public readonly RefRW<LocalToWorld> LocalToWorld;
+
+
+
+    public readonly EnabledRefRO<TankAimFreeTag> TankAimLockedTag;
+    public readonly EnabledRefRO<AliveTankTag> TankAlive;
     [Optional]
     public readonly RefRO<GreenTeamTag> GreenTeamTag;
     [Optional]
     public readonly RefRO<RedTeamTag> RedTeamTag;
-    public bool AimLocked
-    { 
-        get => Properties.ValueRO.Locked;
-        set => Properties.ValueRW.Locked = value; 
-    }
+    public bool AimLocked => TankAimLockedTag.ValueRO;
+    public float RechargeTime => Properties.ValueRO.Blob.Value.Delay;
 
     public Team Team => GreenTeamTag.IsValid ? Team.Green : Team.Red;
 
@@ -41,8 +43,6 @@ public readonly partial struct TankAspect : IAspect
         var res = position - target;
         var normalized = math.normalize(res.ToXZ());
         var radians = math.atan2(normalized.x, normalized.y);
-        //        LocalTransform.ValueRW.RotateY(radians);
-        //return radians * (180f / math.PI);
         return radians;
         
     }
