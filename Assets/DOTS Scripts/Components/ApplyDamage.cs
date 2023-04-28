@@ -13,9 +13,4 @@ public struct ApplyDamage : IBufferElementData
 
 }
 
-public struct AttackDelayTimer : IComponentData
-{
-    public float Value;
-}
-
 

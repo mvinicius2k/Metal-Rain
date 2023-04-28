@@ -49,7 +49,6 @@ public class TankStatsBlobAssetBaker : Baker<TankPropertiesMono>
         });
         AddComponent(entity, new TankAttack());
         SetComponentEnabled<TankAttack>(entity, false);
-        AddComponent(entity, new AttackDelayTimer());
         AddComponent<StandbyTankTag>(entity);
         
         //SetComponentEnabled<TankAttack>(entity, true);

@@ -8,6 +8,7 @@ using Unity.Entities;
 public struct TankAttack : IEnableableComponent, IComponentData
 {
     public Entity Target;
+    public float Timer;
     
 }
 

@@ -13,7 +13,7 @@ using UnityEngine;
 public partial struct RadarSystem : ISystem
 {
     private bool started;
-
+    private bool endgame;
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<TankProperties>();
@@ -21,6 +21,9 @@ public partial struct RadarSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
+        if (endgame)
+            return;
+
         if (Input.GetKeyDown(KeyCode.Space))
             started = true;
 
@@ -35,7 +38,12 @@ public partial struct RadarSystem : ISystem
         var greenTanksQuery = new EntityQueryBuilder(Allocator.Temp)
              .WithAll<TankProperties, LocalToWorld, GreenTeamTag, AliveTankTag>()
              .Build(ref state);
-
+        if(redTanksQuery.IsEmpty || greenTanksQuery.IsEmpty)
+        {
+            endgame = true;
+            Debug.Log("Fim de jogo");
+            return;
+        }
         var singleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
         var ecb = singleton.CreateCommandBuffer(state.WorldUnmanaged);
 
@@ -70,8 +78,6 @@ public partial struct TankAimJob : IJobEntity
     {
 
 
-        if (GreenTanks.Length == 0 || RedTanks.Length == 0)
-            return;
 
         
 
