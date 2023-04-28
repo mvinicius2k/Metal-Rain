@@ -10,15 +10,15 @@ using Unity.Entities;
 public readonly partial struct ApplyDamageAspect : IAspect
 {
     public readonly Entity Entity;
-    public readonly DynamicBuffer<ApplyDamage> ApplyDamage;
-    public readonly RefRW<TankProperties> Properties;
+    public readonly RefRW<TankAttack> TankAim;
+    private readonly RefRO<TankProperties> properties;
     private readonly RefRW<ApplyDamageTimer> timer;
 
     public float Timer { get => timer.ValueRO.Value; set => timer.ValueRW.Value = value; }
-    public void RestartTimer()
-    {
-        Timer = Properties.ValueRO.Blob.Value.Delay;
-    }
+    public Entity TargetEntity => TankAim.ValueRO.Target;
+    public TankProperties Properties => properties.ValueRO;
+    public ref TankStatsData BaseProperties => ref properties.ValueRO.Blob.Value;
+    
 
 }
 

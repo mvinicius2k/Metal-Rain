@@ -47,8 +47,10 @@ public class TankStatsBlobAssetBaker : Baker<TankPropertiesMono>
         {
             Value = new Unity.Mathematics.Random(50)
         });
-        AddComponent(entity, new TankAimFreeTag());
-        SetComponentEnabled<TankAimFreeTag>(entity, true);
+        AddComponent(entity, new TankAttack());
+        AddComponent<StandbyTankTag>(entity);
+
+        //SetComponentEnabled<TankAttack>(entity, true);
         //AddComponent<CleanupTank>(entity);
 
 

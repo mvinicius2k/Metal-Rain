@@ -115,6 +115,7 @@ public partial struct TankSpawnerPointsJob : IJobEntity
                 Scale = 1f
 
             });
+            
             if (spawnerAspect.Spawner.ValueRO.Team == Team.Green)
                 Ecb.AddComponent(sortKey, newTank, new GreenTeamTag());
             else

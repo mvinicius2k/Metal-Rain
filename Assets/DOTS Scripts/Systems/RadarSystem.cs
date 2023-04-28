@@ -70,6 +70,9 @@ public partial struct TankAimJob : IJobEntity
     {
         if (GreenTanks.Length == 0 || RedTanks.Length == 0)
             return;
+
+        
+
         Debug.Log("Mirando");
         Entity selectedTank;
         LocalToWorld selectedTarget;
@@ -88,23 +91,12 @@ public partial struct TankAimJob : IJobEntity
         }
 
         tank.SetAimTo(selectedTarget.Position);
-        Ecb.SetComponentEnabled<TankAimFreeTag>(sortkey, tank.Entity, false);
-
-        var buffer = Ecb.AddBuffer<ApplyDamage>(sortkey, selectedTank);
-        buffer.Add(new ApplyDamage
+        Ecb.SetComponent(sortkey, tank.Entity, new TankAttack
         {
-            From = tank.Entity,
-            Cadence = tank.Properties.ValueRO.Blob.Value.Cadence,
-            Damage = tank.Properties.ValueRO.Blob.Value.Damage,
+            Target = selectedTank
         });
-
-        var rechargeDuration = tank.Properties.ValueRO.Blob.Value.Delay;
-        Ecb.AddComponent(sortkey, selectedTank, new ApplyDamageTimer
-        {
-            Value = Random.NextFloat(0f, rechargeDuration)
-        });
-
-        //tank.AimLocked = true;
+        Ecb.SetComponentEnabled<TankAttack>(sortkey, tank.Entity, true);
+        Ecb.SetComponentEnabled<StandbyTankTag>(sortkey, tank.Entity, false);
 
     }
 }

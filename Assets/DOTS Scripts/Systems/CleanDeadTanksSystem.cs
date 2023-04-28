@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [RequireMatchingQueriesForUpdate]
-[UpdateAfter(typeof(DamageSystem))]
+[UpdateAfter(typeof(AttackSystem))]
 public partial struct CleanDeadTanksSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
