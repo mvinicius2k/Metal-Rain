@@ -107,7 +107,7 @@ public partial struct TankSpawnerPointsJob : IJobEntity
             var newTank = Ecb.Instantiate(sortKey, spawnerAspect.Spawner.ValueRO.ChosenTank);
 
             Ecb.AddComponent<AliveTankTag>(sortKey, newTank);
-            Ecb.AddComponent<CleanupTank>(sortKey, newTank);
+            //Ecb.AddComponent<CleanupTank>(sortKey, newTank);
             Ecb.SetComponent(sortKey, newTank, new LocalTransform
             {
                 Position = position,

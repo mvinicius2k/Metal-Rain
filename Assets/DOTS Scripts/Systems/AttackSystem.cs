@@ -11,7 +11,7 @@ public partial struct AttackSystem : ISystem
 
     public void OnCreate(ref SystemState state)
     {
-        //state.RequireForUpdate<ApplyDamage>();
+        state.RequireForUpdate<TankAttack>();
     }
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
@@ -47,8 +47,10 @@ public partial struct ApplyDamageJob : IJobEntity
         var buffer = Ecb.AddBuffer<Damage>(sortkey, aspect.TargetEntity);
         buffer.Add(new Damage
         {
-            Value = aspect.BaseProperties.Damage
+            Value = aspect.BaseProperties.Damage,
+            Source = aspect.Entity
         });
+        
 
         aspect.Timer = aspect.BaseProperties.Delay;
     }

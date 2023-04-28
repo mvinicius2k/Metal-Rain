@@ -68,6 +68,8 @@ public partial struct TankAimJob : IJobEntity
     [BurstCompile]//
     public void Execute(TankAspect tank, [ChunkIndexInQuery] int sortkey)
     {
+
+
         if (GreenTanks.Length == 0 || RedTanks.Length == 0)
             return;
 

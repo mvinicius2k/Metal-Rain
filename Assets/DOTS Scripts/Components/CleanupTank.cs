@@ -6,7 +6,4 @@ using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Entities;
 
-public struct CleanupTank : ICleanupComponentData
-{
-}
 public struct AliveTankTag : IComponentData, IEnableableComponent { }

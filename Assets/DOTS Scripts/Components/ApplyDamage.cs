@@ -13,7 +13,7 @@ public struct ApplyDamage : IBufferElementData
 
 }
 
-public struct ApplyDamageTimer : IComponentData
+public struct AttackDelayTimer : IComponentData
 {
     public float Value;
 }
