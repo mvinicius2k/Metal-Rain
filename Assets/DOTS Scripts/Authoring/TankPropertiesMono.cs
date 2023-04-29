@@ -50,7 +50,8 @@ public class TankStatsBlobAssetBaker : Baker<TankPropertiesMono>
         AddComponent(entity, new TankAttack());
         SetComponentEnabled<TankAttack>(entity, false);
         AddComponent<StandbyTankTag>(entity);
-        
+        AddBuffer<Damage>(entity);
+        //AddBuffer<TargetedTank>(entity);
         //SetComponentEnabled<TankAttack>(entity, true);
         //AddComponent<CleanupTank>(entity);
 

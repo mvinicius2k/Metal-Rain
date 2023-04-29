@@ -14,11 +14,15 @@ public readonly partial struct TankAspect : IAspect
     public readonly RefRW<TankProperties> Properties;
     public readonly RefRW<LocalTransform> LocalTransform;
     public readonly RefRW<LocalToWorld> LocalToWorld;
+    private readonly EnabledRefRO<StandbyTankTag> standbyTank;
+    
 
     [Optional]
     private readonly RefRO<GreenTeamTag> greenTeamTag;
     [Optional]
     private readonly RefRO<RedTeamTag> redTeamTag;
+    [Optional]
+    public readonly RefRW<TankAttack> Attack;
     public float RechargeTime => Properties.ValueRO.Blob.Value.Delay;
 
     public Team Team => greenTeamTag.IsValid ? Team.Green : Team.Red;

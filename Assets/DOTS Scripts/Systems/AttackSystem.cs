@@ -11,7 +11,6 @@ public partial struct AttackSystem : ISystem
 
     public void OnCreate(ref SystemState state)
     {
-        state.RequireForUpdate<TankAttack>();
     }
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
@@ -20,10 +19,10 @@ public partial struct AttackSystem : ISystem
 
         new ApplyDamageJob
         {
-            Ecb = ecb.AsParallelWriter(),
+            Ecb = ecb,
             DeltaTime = SystemAPI.Time.DeltaTime
-        }.ScheduleParallel();
-        
+        }.Schedule();
+
         state.Dependency.Complete();
         ecb.Playback(state.EntityManager);
         ecb.Dispose();
@@ -35,23 +34,24 @@ public partial struct AttackSystem : ISystem
 public partial struct ApplyDamageJob : IJobEntity
 {
     public float DeltaTime;
-    public EntityCommandBuffer.ParallelWriter Ecb;
-    public void Execute(ApplyDamageAspect aspect, [ChunkIndexInQuery] int sortkey)
+    public EntityCommandBuffer Ecb;
+    public void Execute(ApplyDamageAspect aspect)
     {
-        if(aspect.Timer > 0)
+        if (aspect.Timer > 0)
         {
             aspect.Timer -= DeltaTime;
             return;
         }
 
-        var buffer = Ecb.AddBuffer<Damage>(sortkey, aspect.TargetEntity);
-        buffer.Add(new Damage
+        
+        
+        Ecb.AppendToBuffer(aspect.TargetEntity, new Damage
         {
             Value = aspect.BaseProperties.Damage,
-            Source = aspect.Entity
         });
-        
 
+        if(aspect.BaseProperties.Damage == 50f)
+            Debug.Log($"Attack de {aspect.BaseProperties.Damage}");
         aspect.Timer = aspect.BaseProperties.Delay;
     }
 }

@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{5B91A10D-F2ED-718C-2E82-0678FDD58C2C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -85,7 +86,6 @@
     <Compile Include="Assets\Common Scripts\Team.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\AttackSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TankSpawnerAspect.cs" />
-    <Compile Include="Assets\DOTS Scripts\Systems\CleanDeadTanksSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Tags.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\TankSpawnerMono.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\ApplyDamage.cs" />
@@ -96,10 +96,10 @@
     <Compile Include="Assets\Common Scripts\StringUtils.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\DefenseSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\WorldSelection.cs" />
-    <Compile Include="Assets\DOTS Scripts\Components\StandbyTankTag.cs" />
     <Compile Include="Assets\OOD Scripts\AnaliticsSetup.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankProperties.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\TankSpawnerSystem.cs" />
+    <Compile Include="Assets\DOTS Scripts\Systems\CleanupTankSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\ApplyDamageAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankSpawner.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\SelectionWorldMono.cs" />

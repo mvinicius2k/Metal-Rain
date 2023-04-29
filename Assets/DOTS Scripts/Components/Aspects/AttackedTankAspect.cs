@@ -11,8 +11,10 @@ public readonly partial struct AttackedTankAspect : IAspect
     public readonly Entity Entity;
 
     public readonly RefRW<TankProperties> Properties;
+    public readonly RefRW<TankAttack> Attack;
     public readonly DynamicBuffer<Damage> DamageBuffer;
-
     public float Life { get => Properties.ValueRO.CurrentLife; set => Properties.ValueRW.CurrentLife = value; }
+
+
 
 }

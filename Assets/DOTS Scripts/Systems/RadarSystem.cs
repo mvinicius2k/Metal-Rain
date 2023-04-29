@@ -31,21 +31,27 @@ public partial struct RadarSystem : ISystem
             return;
 
 
-
+        //Todos os tanks do time vermelho vivos
         var redTanksQuery = new EntityQueryBuilder(Allocator.Temp)
                  .WithAll<TankProperties, LocalToWorld, RedTeamTag, AliveTankTag>()
                  .Build(ref state);
+        //Verdes também
         var greenTanksQuery = new EntityQueryBuilder(Allocator.Temp)
              .WithAll<TankProperties, LocalToWorld, GreenTeamTag, AliveTankTag>()
              .Build(ref state);
+
+        //Se não houver nenhum tanque em algum dos lados, gameover
         if(redTanksQuery.IsEmpty || greenTanksQuery.IsEmpty)
         {
             endgame = true;
             Debug.Log("Fim de jogo");
             return;
         }
-        var singleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
-        var ecb = singleton.CreateCommandBuffer(state.WorldUnmanaged);
+        //var singleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
+        //var ecb = singleton.CreateCommandBuffer(state.WorldUnmanaged);
+        //Usar sync points
+
+        var ecb = new EntityCommandBuffer(Allocator.TempJob);
 
         new TankAimJob
         {
@@ -58,6 +64,10 @@ public partial struct RadarSystem : ISystem
 
 
         }.ScheduleParallel();
+
+        state.Dependency.Complete();
+        ecb.Playback(state.EntityManager);
+        ecb.Dispose();
     }
 
 
@@ -73,20 +83,16 @@ public partial struct TankAimJob : IJobEntity
     public EntityCommandBuffer.ParallelWriter Ecb;
 
     public Unity.Mathematics.Random Random;
-    [BurstCompile]//
+    [BurstCompile]
     public void Execute(TankAspect tank, [ChunkIndexInQuery] int sortkey)
     {
 
-
-
-        
-
-        Debug.Log("Mirando");
-        Entity selectedTank;
+        Entity selectedTank; //Inimigo selecionado pelo radar do tanque
         LocalToWorld selectedTarget;
+
+        //Buscando tanque inimigo para selecionar (será modificado para pegar somente quem está na vista)
         if (tank.Team == Team.Red)
         {
-
             var randomIndex = Random.NextInt(0, GreenTanks.Length);
             selectedTarget = GreenTanksPositions[randomIndex];
             selectedTank = GreenTanks[randomIndex];
@@ -98,12 +104,12 @@ public partial struct TankAimJob : IJobEntity
             selectedTank = RedTanks[randomIndex];
         }
 
-        tank.SetAimTo(selectedTarget.Position);
-        Ecb.SetComponent(sortkey, tank.Entity, new TankAttack
-        {
-            Target = selectedTank
-        });
-        Ecb.SetComponentEnabled<TankAttack>(sortkey, tank.Entity, true);
+        //Debug.Log($"{tank.Entity} Mirando em {selectedTank}");
+        tank.SetAimTo(selectedTarget.Position); //Move a malha
+        Ecb.SetComponentEnabled<TankAttack>(sortkey, tank.Entity, true); //Ativa o componenete de ataque, que vai ser processado em AttackSystem
+        tank.Attack.ValueRW.Target = selectedTank; //Registra o tanque inimigo escolhido para mirar
+        
+        //Não é mais um tanque livre
         Ecb.SetComponentEnabled<StandbyTankTag>(sortkey, tank.Entity, false);
 
     }

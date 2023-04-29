@@ -18,5 +18,5 @@ public struct TankAttack : IEnableableComponent, IComponentData
 public struct Damage : IBufferElementData
 {
     public float Value;
-    public Entity Source;
+
 }

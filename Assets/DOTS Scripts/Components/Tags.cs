@@ -6,3 +6,6 @@ using System.Threading.Tasks;
 using Unity.Entities;
 
 public struct AliveTankTag : IComponentData, IEnableableComponent { }
+public struct StandbyTankTag : IComponentData, IEnableableComponent { }
+public struct TankCleanup : ICleanupComponentData { }
+

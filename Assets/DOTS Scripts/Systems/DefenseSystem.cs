@@ -7,6 +7,7 @@ using Unity.Entities;
 using Unity.Jobs;
 using UnityEngine;
 
+[UpdateAfter(typeof(AttackSystem))]
 public partial struct DefenseSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
@@ -17,13 +18,11 @@ public partial struct DefenseSystem : ISystem
     {
         var ecb = new EntityCommandBuffer(Unity.Collections.Allocator.TempJob);
 
-        var digestJob = new DigestDamageJob
+        new DigestDamageJob
         {
             Ecb = ecb,
 
-        };
-
-        digestJob.Schedule();
+        }.Run();
 
 
         state.Dependency.Complete();
@@ -40,27 +39,21 @@ public partial struct DigestDamageJob : IJobEntity
         for (int i = 0; i < attackedTank.DamageBuffer.Length; i++)
         {
             attackedTank.Life -= attackedTank.DamageBuffer[i].Value;
-            Debug.Log($"Dano sofrido {attackedTank.DamageBuffer[i].Value} de { attackedTank.DamageBuffer[i].Source}");
         }
-
 
         //Se morrer
         if (attackedTank.Life <= 0)
         {
-            for (int i = 0; i < attackedTank.DamageBuffer.Length; i++)
-            {
-                var tankToFree = attackedTank.DamageBuffer[i].Source;
-                Ecb.SetComponent(tankToFree, new TankAttack
-                {
-                    Target = Entity.Null
-                });
-                Ecb.SetComponentEnabled<TankAttack>(tankToFree, false);
-                Ecb.SetComponentEnabled<StandbyTankTag>(tankToFree, true);
-            }
-            Ecb.SetComponentEnabled<AliveTankTag>(attackedTank.Entity, false);
-            Ecb.DestroyEntity(attackedTank.Entity);
 
+            Debug.Log($"Matando {attackedTank.Entity}");
+
+            //Seta tags para definir como morto e para limpar tank morto
+            Ecb.SetComponentEnabled<AliveTankTag>(attackedTank.Entity, false);
+            Ecb.AddComponent<TankCleanup>(attackedTank.Entity);
+            Ecb.DestroyEntity(attackedTank.Entity);
+            
         }
+
 
         attackedTank.DamageBuffer.Clear();
 
