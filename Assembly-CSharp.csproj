@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{5B91A10D-F2ED-718C-2E82-0678FDD58C2C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -48,7 +47,7 @@
   <PropertyGroup>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnityProjectGenerator>Package</UnityProjectGenerator>
-    <UnityProjectGeneratorVersion>2.0.17</UnityProjectGeneratorVersion>
+    <UnityProjectGeneratorVersion>2.0.18</UnityProjectGeneratorVersion>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2022.2.13f1</UnityVersion>
@@ -57,22 +56,23 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="C:\Program Files\Unity\2022.2.13f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="C:\Program Files\Unity\2022.2.13f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.0-pre.65\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.0-pre.65\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.SystemAPI.QueryBuilder.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.0-pre.65\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.SystemAPI.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.0-pre.65\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.0-pre.65\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.LambdaJobs.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.0-pre.65\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.Common.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.0-pre.65\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.SystemAPI.Query.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.0-pre.65\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.CodeFixes.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.0-pre.65\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.AspectGenerator.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.0-pre.65\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.Common.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.0-pre.65\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.EntityQueryBulkOperations.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.0-pre.65\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.JobEntityGenerator.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.SystemAPI.QueryBuilder.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.SystemAPI.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.LambdaJobs.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.Common.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.SystemAPI.Query.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.CodeFixes.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.AspectGenerator.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.Common.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.EntityQueryBulkOperations.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.JobEntityGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\AnalyticsModels\TankSpawnFieldModel.cs" />
     <Compile Include="Assets\OOD Scripts\SpawnField_MB.cs" />
+    <Compile Include="Assets\DOTS Scripts\Components\Aspects\RedTankAspect.cs" />
     <Compile Include="Assets\OOD Scripts\Tank_MB.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\SelectionTileMono.cs" />
     <Compile Include="Assets\Common Scripts\Constants.cs" />
@@ -86,6 +86,7 @@
     <Compile Include="Assets\Common Scripts\Team.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\AttackSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TankSpawnerAspect.cs" />
+    <Compile Include="Assets\DOTS Scripts\Components\Aspects\GreenTanksAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Tags.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\TankSpawnerMono.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\ApplyDamage.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Assets\DOTS Scripts\Authoring\SelectionWorldMono.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\CameraControllerSystem.cs" />
     <Compile Include="Assets\OOD Scripts\TankStats_SO.cs" />
+    <Compile Include="Assets\DOTS Scripts\Components\Aspects\IWorldPosition.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TankAspect.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -361,10 +363,7 @@
       <HintPath>C:\Program Files\Unity\2022.2.13f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Collections.LowLevel.ILSupport">
-      <HintPath>Library\PackageCache\com.unity.collections@2.1.0-pre.18\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>Library\PackageCache\com.unity.ext.nunit@2.0.3\net40\unity-custom\nunit.framework.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.collections@2.1.4\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.8.0\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
