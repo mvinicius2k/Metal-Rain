@@ -45,4 +45,16 @@ public static class Extensions
         return result;
     }
 
+    public static void Shuffle<T>(this Unity.Mathematics.Random rng, T[] array)
+    {
+        int n = array.Length;
+        while (n > 1)
+        {
+            int k = rng.NextInt(n--);
+            T temp = array[n];
+            array[n] = array[k];
+            array[k] = temp;
+        }
+    }   
+
 }

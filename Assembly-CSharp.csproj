@@ -75,13 +75,14 @@
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\RedTankAspect.cs" />
     <Compile Include="Assets\OOD Scripts\Tank_MB.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\SelectionTileMono.cs" />
+    <Compile Include="Assets\Starfield Skybox\Demo\Script\LookCamera.cs" />
+    <Compile Include="Assets\Common Scripts\TankStats_SO.cs" />
     <Compile Include="Assets\Common Scripts\Constants.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\CameraSingleton.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\TankPropertiesMono.cs" />
     <Compile Include="Assets\Common Scripts\Extensions.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\SelectionSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankRandom.cs" />
-    <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\AttackedTankAspect.cs" />
     <Compile Include="Assets\Common Scripts\Team.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\AttackSystem.cs" />
@@ -93,24 +94,23 @@
     <Compile Include="Assets\Common Scripts\AnaliticsUtils.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankAttack.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\RadarSystem.cs" />
-    <Compile Include="Assets\OOD Scripts\Aim_MB.cs" />
     <Compile Include="Assets\Common Scripts\StringUtils.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\DefenseSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\WorldSelection.cs" />
+    <Compile Include="Assets\OOD Scripts\SpawnFieldManager.cs" />
     <Compile Include="Assets\OOD Scripts\AnaliticsSetup.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankProperties.cs" />
+    <Compile Include="Assets\Common Scripts\AimTarget.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\TankSpawnerSystem.cs" />
+    <Compile Include="Assets\Common Scripts\CustomColors.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\CleanupTankSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\ApplyDamageAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankSpawner.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\SelectionWorldMono.cs" />
+    <Compile Include="Assets\OOD Scripts\TankAttack_MB.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\CameraControllerSystem.cs" />
-    <Compile Include="Assets\OOD Scripts\TankStats_SO.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\IWorldPosition.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TankAspect.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Assets\Music\Shooter Synthwave Music Pack\readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
