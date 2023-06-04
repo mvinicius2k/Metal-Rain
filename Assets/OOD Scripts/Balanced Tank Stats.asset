@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 3d700af6bf0dadb42bdaa2490ddad674, type: 3}
   m_Name: Balanced Tank Stats
-  m_EditorClassIdentifier: Assembly-CSharp::BalancedTankStats
+  m_EditorClassIdentifier: 
   MaxLife: 100
   Damage: 25
   Cadence: 0.5

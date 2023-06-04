@@ -111,7 +111,6 @@
     <Compile Include="Assets\Common Scripts\HeavyTankStats.cs" />
     <Compile Include="Assets\OOD Scripts\TankAttack_MB.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\CameraControllerSystem.cs" />
-    <Compile Include="Assets\DOTS Scripts\Components\Aspects\IWorldPosition.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TankAspect.cs" />
   </ItemGroup>
   <ItemGroup>

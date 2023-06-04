@@ -328,6 +328,9 @@
     <Reference Include="Unity.Plastic.Antlr3.Runtime">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@2.0.1\Lib\Editor\PlasticSCM\Unity.Plastic.Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="0Harmony_4.5">
+      <HintPath>Assets\CastVisualizer\Editor\HarmonyLib\0Harmony_4.5.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Plastic.Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@2.0.1\Lib\Editor\PlasticSCM\Unity.Plastic.Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -351,9 +354,6 @@
     </Reference>
     <Reference Include="unityplastic">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@2.0.1\Lib\Editor\PlasticSCM\unityplastic.dll</HintPath>
-    </Reference>
-    <Reference Include="0Harmony_4.5">
-      <HintPath>Assets\CastVisualizer\Editor\HarmonyLib\0Harmony_4.5.dll</HintPath>
     </Reference>
     <Reference Include="0Harmony_3.5">
       <HintPath>Assets\CastVisualizer\Editor\HarmonyLib\0Harmony_3.5.dll</HintPath>
