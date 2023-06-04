@@ -52,12 +52,15 @@ public class TankAttack_MB : MonoBehaviour
                         Target = enemy,
                         Value = distance
                     });
+
+                    if (distances.Count == Precision)
+                        goto Sort; //Goto sofre hate
                     
                 }
                 
             }
         }
-
+        Sort:
         //for (int i = 0; i < distances.Length; i++)
         //{
         //    var distance = Vector3.Distance(Tank.transform.position, enemies[i].transform.position);
@@ -68,6 +71,8 @@ public class TankAttack_MB : MonoBehaviour
         //    };
 
         //}
+
+
         distances.Sort(new DistanceComparerMB<Tank_MB>());
         return distances;
 
