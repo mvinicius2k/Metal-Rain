@@ -11,7 +11,6 @@ public struct Distance<T> where T : MonoBehaviour
 {
     public T Target;
     public float Value;
-    public Ray Ray;
 }
 
 public struct DistanceComparerMB<T> : IComparer<Distance<T>> where T : MonoBehaviour

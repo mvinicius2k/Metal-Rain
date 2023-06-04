@@ -9,6 +9,8 @@ using Unity.Services.Analytics;
 using UnityEngine;
 using UnityEngine.Events;
 
+
+
 public class SpawnField_MB : MonoBehaviour
 {
 
@@ -23,6 +25,8 @@ public class SpawnField_MB : MonoBehaviour
     private int xLimit, zLimit;
     private Team enemyTeam;
     public Team EnemyTeam => enemyTeam;
+    private string enemyTag;
+    public string EnemyTag => enemyTag;
     public int Size => zLimit * xLimit;
 
 
@@ -50,6 +54,7 @@ public class SpawnField_MB : MonoBehaviour
                 newTank.transform.eulerAngles = new Vector3(0f, Orientation, 0f);
                 var tankMb = newTank.GetComponent<Tank_MB>();
                 tankMb.Dependencies(this);
+                tankMb.OnDead.AddListener((tank) => SpawnFieldManager.Instance.TanksProperties[Team].DeadCount++);
                 tanks.Add(tankMb);
             }
         }
@@ -79,15 +84,15 @@ public class SpawnField_MB : MonoBehaviour
         zLimit = Mathf.RoundToInt(Mathf.Abs((StartAt.y - EndAt.y)) / BlockSize.y);
         tanks = new List<Tank_MB>(xLimit * zLimit);
         enemyTeam = Team == Team.Green ? Team.Red : Team.Green;
-
+        enemyTag = Team == Team.Green ? Constants.TagRedTeam : Constants.TagGreenTeam;
     }
 
-    
+
 
     // Update is called once per frame
-    void Update()
+    private void Start()
     {
-       
+        
     }
 
     private void OnDrawGizmos()

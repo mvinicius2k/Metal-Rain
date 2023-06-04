@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 152e1d2d730a07c48936befa36897a15, type: 3}
   m_Name: Hunter Tank Stats
-  m_EditorClassIdentifier: Assembly-CSharp::HunterTankStats
+  m_EditorClassIdentifier: 
   MaxLife: 100
-  Damage: 100
-  Cadence: 0.1428571
+  Damage: 95
+  Cadence: 0.14285715
   Name: "Tanque Ca\xE7ador"

@@ -14,6 +14,7 @@ public class Tank_MB : MonoBehaviour
     //public Aim_MB Aim;
     public TankAttack_MB Attack;
     public float CurrentLife;
+    public GameObject Model;
     public UnityEvent<Tank_MB> OnDead;
     public Team Team => SpawnField.Team;
     
@@ -40,18 +41,15 @@ public class Tank_MB : MonoBehaviour
             attack.EnemyTargeted = null;
         }
         spawnField.Tanks.Remove(this);
-        
+        OnDead.Invoke(this);
     }
 
-    private void Update()
-    {
-        
-
-    }
+  
 
     public void Dependencies(SpawnField_MB field)
     {
         spawnField = field;
-        tag = field.Team == Team.Green ? Constants.TagGreenTeam : Constants.TagRedTeam;
+        Model.tag = field.Team == Team.Green ? Constants.TagGreenTeam : Constants.TagRedTeam;
+
     }
 }
