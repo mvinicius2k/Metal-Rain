@@ -74,15 +74,18 @@
     <Compile Include="Assets\OOD Scripts\SpawnField_MB.cs" />
     <Compile Include="Assets\OOD Scripts\Tank_MB.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\SelectionTileMono.cs" />
+    <Compile Include="Assets\Starfield Skybox\Demo\Script\LookCamera.cs" />
     <Compile Include="Assets\Common Scripts\Constants.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\CameraSingleton.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\TankPropertiesMono.cs" />
     <Compile Include="Assets\Common Scripts\Extensions.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\SelectionSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankRandom.cs" />
-    <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
+    <Compile Include="Assets\Common Scripts\BalancedTankStats.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\AttackedTankAspect.cs" />
+    <Compile Include="Assets\Common Scripts\TankStatsBase.cs" />
     <Compile Include="Assets\Common Scripts\Team.cs" />
+    <Compile Include="Assets\Common Scripts\LightTankStats.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\AttackSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TankSpawnerAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Tags.cs" />
@@ -91,23 +94,28 @@
     <Compile Include="Assets\Common Scripts\AnaliticsUtils.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankAttack.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\RadarSystem.cs" />
-    <Compile Include="Assets\OOD Scripts\Aim_MB.cs" />
     <Compile Include="Assets\Common Scripts\StringUtils.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\DefenseSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\WorldSelection.cs" />
+    <Compile Include="Assets\OOD Scripts\SpawnFieldManager.cs" />
     <Compile Include="Assets\OOD Scripts\AnaliticsSetup.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankProperties.cs" />
+    <Compile Include="Assets\Common Scripts\AimTarget.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\TankSpawnerSystem.cs" />
+    <Compile Include="Assets\Common Scripts\HunterTankStats.cs" />
+    <Compile Include="Assets\Common Scripts\CustomColors.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\CleanupTankSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\ApplyDamageAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankSpawner.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\SelectionWorldMono.cs" />
+    <Compile Include="Assets\Common Scripts\HeavyTankStats.cs" />
+    <Compile Include="Assets\OOD Scripts\TankAttack_MB.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\CameraControllerSystem.cs" />
-    <Compile Include="Assets\OOD Scripts\TankStats_SO.cs" />
+    <Compile Include="Assets\DOTS Scripts\Components\Aspects\IWorldPosition.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TankAspect.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Music\Shooter Synthwave Music Pack\readme.txt" />
+    <None Include="Assets\CastVisualizer\Third-Party-Notices.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -940,6 +948,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Unity.CastVisualizer.Editor.csproj">
+      <Project>{79422CA2-4A59-9D51-7EA3-DEC29B25A62B}</Project>
+      <Name>Unity.CastVisualizer.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.CastVisualizer.Samples.SampleScenes.csproj">
+      <Project>{FD5C59E8-0601-5883-634B-1EEF587BF9A1}</Project>
+      <Name>Unity.CastVisualizer.Samples.SampleScenes</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.CastVisualizer.Runtime.csproj">
+      <Project>{DB0DF1EE-CF90-A681-C92E-944C8C95B6F2}</Project>
+      <Name>Unity.CastVisualizer.Runtime</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

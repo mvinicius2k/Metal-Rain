@@ -1,51 +1,55 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEditor.VersionControl;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Tank_MB : MonoBehaviour
 {
-    public TankStats_SO Stats;
-    public Aim_MB Aim;
+    public TankStatsBase Stats;
+    //public Aim_MB Aim;
+    public TankAttack_MB Attack;
     public float CurrentLife;
+    public GameObject Model;
+    public UnityEvent<Tank_MB> OnDead;
+    public Team Team => SpawnField.Team;
+    
 
-    private float timerShot;
-    private Stopwatch stopwatch;
+    public HashSet<TankAttack_MB> TargetedBy { get => targetedBy;}
+    public SpawnField_MB SpawnField { get => spawnField; set => spawnField = value; }
+
+    private SpawnField_MB spawnField;
+    private Team enemyTeam;
+    private HashSet<TankAttack_MB> targetedBy;
+
 
     private void Awake()
     {
-        
-    }
-    private void Start()
-    {
-        
         CurrentLife = Stats.MaxLife;
-        timerShot = Random.Range(0f, Stats.Delay); //Pequeno random para os tanque não atirarem todos sempre ao mesmo tempo
+        targetedBy = new();
+        
+    }
+        private void OnDestroy()
+    {
+        
+        foreach (var attack in targetedBy)
+        {
+            attack.EnemyTargeted = null;
+        }
+        spawnField.Tanks.Remove(this);
+        OnDead.Invoke(this);
     }
 
-    private void Update()
+  
+
+    public void Dependencies(SpawnField_MB field)
     {
-        if (!Aim.Locked || Aim.Target == null)
-            return;
-
-        if(timerShot <= 0f) //hora de atirar
-        {
-            Aim.Target.CurrentLife -= Stats.Damage;
-
-            timerShot = Stats.Delay;
-            if (Aim.Target.CurrentLife <= 0)
-            {
-                
-                Destroy(Aim.Target.gameObject);
-                
-            }
-            
-        }
-        else
-            timerShot -= Time.deltaTime;
-
+        spawnField = field;
+        Model.tag = field.Team == Team.Green ? Constants.TagGreenTeam : Constants.TagRedTeam;
 
     }
 }

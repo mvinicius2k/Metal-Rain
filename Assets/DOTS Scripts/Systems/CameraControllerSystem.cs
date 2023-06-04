@@ -16,8 +16,8 @@ public partial struct CameraControllerSystem : ISystem
 
         var inputVector = new Vector3
         {
-            x = Input.GetAxis("Horizontal"),
-            z = Input.GetAxis("Foward")
+            x = Input.GetAxis(Constants.InputHorizontal),
+            z = Input.GetAxis(Constants.InputFoward)
         };
 
         //Movimentação da camera
@@ -34,11 +34,11 @@ public partial struct CameraControllerSystem : ISystem
 
         //Rotação da camera
 
-        if (Input.GetButtonDown("RotateCam"))
+        if (Input.GetButtonDown(Constants.InputRotateCam))
         {
             lastMousePosition = Input.mousePosition; //Obtendo ponto de partida para o deslocamento do mouse
         }
-        if (Input.GetButton("RotateCam"))
+        if (Input.GetButton(Constants.InputRotateCam))
         {
             var mouseOffset = lastMousePosition - Input.mousePosition;
             if (mouseOffset != Vector3.zero)

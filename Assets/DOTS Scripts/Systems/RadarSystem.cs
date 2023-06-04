@@ -1,17 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
 using Unity.Burst;
 using Unity.Burst.Intrinsics;
 using Unity.Collections;
-using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
-using Unity.Transforms;
 using UnityEngine;
 
 [BurstCompile, UpdateInGroup(typeof(InitializationSystemGroup))]
@@ -139,6 +133,7 @@ public partial struct TankRadarJob : IJobChunk
                                 Position = enemiesChunk[j].Position,
                                 Entity = enemiesChunk[j].Entity
                             };
+                            
                             targets.Sort(new DistanceComparer());
                             break;
                         }

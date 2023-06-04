@@ -16,7 +16,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: back-lights-glass
-    second: {fileID: 2100000, guid: b63a69c092821fa4cbb7098283058574, type: 2}
+    second: {fileID: 2100000, guid: 5cfc18219c058c142809e1da0bb645c8, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
