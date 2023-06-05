@@ -46,31 +46,31 @@ public partial struct TankSpawnerSystem : ISystem
             {
                 Team = teamToSpawn,
                 Ecb = ecb.AsParallelWriter(),
-                MaxTanks = tanksCount //Para se obter a quantidade de tanques spawnados
+                //MaxTanks = tanksCount //Para se obter a quantidade de tanques spawnados
 
-            }.Schedule();
+            }.ScheduleParallel();
 
 
-            if (AnaliticsSetup.Instance != null)
-            {
-                state.Dependency.Complete();
-                stopwatch.Stop();
+            //if (AnaliticsSetup.Instance != null)
+            //{
+            //    state.Dependency.Complete();
+            //    stopwatch.Stop();
 
-                var eventParams = new TankSpawnFieldModel
-                {
-                    DOTS = AnaliticsSetup.Instance.IsDOTS,
-                    elapsedTimeMs = (int)stopwatch.ElapsedMilliseconds,
-                    tanksCount = tanksCount.Value,
-                    team = teamToSpawnStr
-                };
+            //    var eventParams = new TankSpawnFieldModel
+            //    {
+            //        DOTS = AnaliticsSetup.Instance.IsDOTS,
+            //        elapsedTimeMs = (int)stopwatch.ElapsedMilliseconds,
+            //        tanksCount = tanksCount.Value,
+            //        team = teamToSpawnStr
+            //    };
 
-                AnalyticsService.Instance.CustomData(TankSpawnFieldModel.EventName, eventParams.GetEventParams());
-                AnalyticsService.Instance.Flush();
+            //    AnalyticsService.Instance.CustomData(TankSpawnFieldModel.EventName, eventParams.GetEventParams());
+            //    AnalyticsService.Instance.Flush();
                 
-                //ecb.Playback(state.EntityManager);
-                //ecb.Dispose();
+            //    //ecb.Playback(state.EntityManager);
+            //    //ecb.Dispose();
 
-            }
+            //}
 
 
 
@@ -84,8 +84,8 @@ public partial struct TankSpawnerPointsJob : IJobEntity
 {
     public EntityCommandBuffer.ParallelWriter Ecb;
     public Team Team;
-    public NativeReference <int> MaxTanks;
-    public void Execute([ChunkIndexInQuery] int sortKey, TankSpawnerAspect spawnerAspect)
+    //public NativeReference <int> MaxTanks;
+    public void Execute(TankSpawnerAspect spawnerAspect, [ChunkIndexInQuery] int sortKey )
     {
         if (spawnerAspect.Spawner.ValueRO.Team != Team)
             return;
@@ -93,12 +93,12 @@ public partial struct TankSpawnerPointsJob : IJobEntity
         float2 BlockSize = spawnerAspect.Spawner.ValueRO.BlockSize;
         float2 Limits = new float2(spawnerAspect.MaxXTanks, spawnerAspect.MaxZTanks);
 
-        MaxTanks.Value = spawnerAspect.MaxZTanks * spawnerAspect.MaxXTanks;
+        var maxTanks = spawnerAspect.MaxZTanks * spawnerAspect.MaxXTanks;
 
         var originFieldPosition = spawnerAspect.LocalTransform.ValueRO.Position;
         //Debug.Log($"Limits {Limits}");
 
-        for (int count = 0; count < MaxTanks.Value; count++)
+        for (int count = 0; count < maxTanks; count++)
         {
             var zPosition = originFieldPosition.z + BlockSize.y * math.trunc(count / Limits.x);
             var xPosition = originFieldPosition.x + BlockSize.x * (count % Limits.x);

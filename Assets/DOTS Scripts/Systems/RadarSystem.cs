@@ -55,29 +55,32 @@ public partial struct RadarSystem : ISystem
         var redSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
         var redEcb = redSingleton.CreateCommandBuffer(state.WorldUnmanaged);
 
-        new TankRadarJob
+        var redJob = new TankRadarJob
         {
             Enemies = greenTanks.ToArchetypeChunkArray(Allocator.TempJob),
-            Ecb = redEcb,
+            Ecb = redEcb.AsParallelWriter(),
             Random = new Unity.Mathematics.Random(50),
             TankAspectTypeHandle = new TankAspect.TypeHandle(ref state),
             Accuracy = math.min(TankAccuracy, greenTanks.CalculateEntityCount())
 
-        }.Run(freeRedTanks);
+        }.ScheduleParallel(freeRedTanks, state.Dependency);
+
+        redJob.Complete();
 
         var greenSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
         var greenEcb = greenSingleton.CreateCommandBuffer(state.WorldUnmanaged);
 
-        new TankRadarJob
+        var greenJob = new TankRadarJob
         {
             Enemies = redTanks.ToArchetypeChunkArray(Allocator.TempJob),
-            Ecb = greenEcb,
+            Ecb = greenEcb.AsParallelWriter(),
             Random = new Unity.Mathematics.Random(50),
             TankAspectTypeHandle = new TankAspect.TypeHandle(ref state),
             Accuracy = math.min(TankAccuracy, redTanks.CalculateEntityCount())
 
-        }.Run(freeGreenTanks);
+        }.ScheduleParallel(freeGreenTanks, redJob);
 
+        greenJob.Complete();
     }
 
 
@@ -94,19 +97,19 @@ public struct AimTarget
     
 }
 
+[BurstCompile]
 public partial struct TankRadarJob : IJobChunk
 {
     [ReadOnly]
     public NativeArray<ArchetypeChunk> Enemies;
     public TankAspect.TypeHandle TankAspectTypeHandle;
     public Unity.Mathematics.Random Random;
-    public EntityCommandBuffer Ecb;
+    public EntityCommandBuffer.ParallelWriter Ecb;
     public int Accuracy;
 
-    //[BurstCompile]
+    [BurstCompile]
     public void Execute(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask, in v128 chunkEnabledMask)
     {
-        Debug.Log($"Accuray: {Accuracy}");
         var tanks = TankAspectTypeHandle.Resolve(chunk);
         
         for (int tankIndex = 0; tankIndex < tanks.Length; tankIndex++)
@@ -150,12 +153,12 @@ public partial struct TankRadarJob : IJobChunk
 
 
             tank.SetAimTo(target.Position); //Move a malha
-            Ecb.SetComponentEnabled<TankAttack>(tank.Entity, true); //Ativa o componenete de ataque, que vai ser processado em AttackSystem
+            Ecb.SetComponentEnabled<TankAttack>(unfilteredChunkIndex, tank.Entity, true); //Ativa o componenete de ataque, que vai ser processado em AttackSystem
             //Registra o tanque inimigo escolhido para mirar
             tank.Attack.ValueRW.Target = target.Entity;
 
             //Não é mais um tanque livre
-            Ecb.SetComponentEnabled<StandbyTankTag>(tank.Entity, false);
+            Ecb.SetComponentEnabled<StandbyTankTag>(unfilteredChunkIndex, tank.Entity, false);
         }
     }
 }

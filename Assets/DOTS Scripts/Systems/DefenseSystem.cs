@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
 using UnityEngine;
@@ -31,9 +32,11 @@ public partial struct DefenseSystem : ISystem
     }
 }
 
+[BurstCompile]
 public partial struct DigestDamageJob : IJobEntity
 {
     public EntityCommandBuffer Ecb;
+    [BurstCompile]
     public void Execute(AttackedTankAspect attackedTank)
     {
         for (int i = 0; i < attackedTank.DamageBuffer.Length; i++)
@@ -45,7 +48,7 @@ public partial struct DigestDamageJob : IJobEntity
         if (attackedTank.Life <= 0)
         {
 
-            Debug.Log($"Matando {attackedTank.Entity}");
+            //Debug.Log($"Matando {attackedTank.Entity}");
 
             //Seta tags para definir como morto e para limpar tank morto
             Ecb.SetComponentEnabled<AliveTankTag>(attackedTank.Entity, false);
