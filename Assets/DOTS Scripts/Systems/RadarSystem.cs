@@ -145,10 +145,6 @@ public partial struct TankRadarJob : IJobChunk
 
             }
             var index = Random.NextInt(0, targets.Length);
-            if(index == -1)
-            {
-                Debug.Log($"{targets.Length}");
-            }
             var target = targets[index];
 
 

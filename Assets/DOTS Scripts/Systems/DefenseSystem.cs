@@ -23,7 +23,7 @@ public partial struct DefenseSystem : ISystem
         {
             Ecb = ecb,
 
-        }.Run();
+        }.Schedule();
 
 
         state.Dependency.Complete();

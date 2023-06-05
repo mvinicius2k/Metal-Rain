@@ -11,6 +11,7 @@ public partial struct AttackSystem : ISystem
 
     public void OnCreate(ref SystemState state)
     {
+        state.RequireForUpdate<TankAttack>();
     }
     [BurstCompile]
     public void OnUpdate(ref SystemState state)

@@ -56,18 +56,18 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="C:\Program Files\Unity\2022.3.0f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="C:\Program Files\Unity\2022.3.0f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.SystemAPI.QueryBuilder.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.SystemAPI.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.LambdaJobs.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.Common.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.SystemAPI.Query.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.CodeFixes.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.AspectGenerator.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.Common.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.EntityQueryBulkOperations.dll" />
-    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.8\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.JobEntityGenerator.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.10\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.10\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.SystemAPI.QueryBuilder.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.10\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.SystemAPI.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.10\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.10\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.LambdaJobs.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.10\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.Common.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.10\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.SystemAPI.Query.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.10\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.CodeFixes.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.10\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.AspectGenerator.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.10\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.Common.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.10\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.EntityQueryBulkOperations.dll" />
+    <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.10\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.JobEntityGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\AnalyticsModels\TankSpawnFieldModel.cs" />

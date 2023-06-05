@@ -111,11 +111,12 @@ public partial struct TankSpawnerPointsJob : IJobEntity
             Ecb.SetComponent(sortKey, newTank, new LocalTransform
             {
                 Position = position,
-                Rotation = quaternion.identity,
+                Rotation = quaternion.EulerXYZ(spawnerAspect.TankSpawnEuler),
                 Scale = 1f
 
             });
             
+
             if (spawnerAspect.Spawner.ValueRO.Team == Team.Green)
                 Ecb.AddComponent(sortKey, newTank, new GreenTeamTag());
             else

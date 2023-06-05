@@ -9,11 +9,8 @@ using UnityEngine;
 
 public class TankPropertiesMono : MonoBehaviour
 {
-    public float MaxLife;
-    public float Damage;
-    public float Cadence;
-    public string Name;
-    public GameObject Prefab;
+    public TankStatsBase Stats;
+    public GameObject Model;
     
 }
 
@@ -25,10 +22,10 @@ public class TankStatsBlobAssetBaker : Baker<TankPropertiesMono>
         var builder = new BlobBuilder(Unity.Collections.Allocator.Temp);
         ref TankStatsData data = ref builder.ConstructRoot<TankStatsData>();
 
-        data.MaxLife = authoring.MaxLife;
-        data.Damage = authoring.Damage;
-        data.Cadence = authoring.Cadence;
-        builder.AllocateString(ref data.Name, authoring.Name);
+        data.MaxLife = authoring.Stats.MaxLife;
+        data.Damage = authoring.Stats.Damage;
+        data.Cadence = authoring.Stats.Cadence;
+        builder.AllocateString(ref data.Name, authoring.Stats.Name);
 
         var reference = builder.CreateBlobAssetReference<TankStatsData>(Unity.Collections.Allocator.Persistent);
         builder.Dispose();
@@ -39,7 +36,7 @@ public class TankStatsBlobAssetBaker : Baker<TankPropertiesMono>
         AddComponent(entity, new TankProperties
         {
             Blob = reference,
-            Prefab = GetEntity(authoring.Prefab, TransformUsageFlags.Dynamic),
+            Prefab = GetEntity(authoring.Model, TransformUsageFlags.Dynamic),
             CurrentLife = data.MaxLife,
             AimTo = math.forward()
         });

@@ -14,12 +14,12 @@ public class TankSpawnerMono : MonoBehaviour
     
     public Vector2 BlockSize, Start, End;
     public GameObject ChosenTank;
-    public Color GizmosColor;
+    public float Orientation;
     public Team Team;
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = GizmosColor;
+        Gizmos.color = Team == Team.Green ? CustomColors.alphaGreen : CustomColors.alphaRed;
         var center = new Vector3
         {
             x = transform.position.x + ((Start.x + End.x) / 2f),
@@ -52,12 +52,8 @@ public class TankSpawnerMonoBaker : Baker<TankSpawnerMono>
             End = authoring.End,
             ChosenTank = GetEntity(authoring.ChosenTank, TransformUsageFlags.Dynamic),
             Team = authoring.Team,
-        });
-        
-        //if(authoring.Team == Team.Green)
-        //    AddComponent(entity, new GreenTeamTag());
-        //else
-        //    AddComponent(entity, new RedTeamTag());
+            Orientation = authoring.Orientation * math.PI/180f
+        }) ;
 
     }
 }
