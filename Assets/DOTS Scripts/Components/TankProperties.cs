@@ -9,7 +9,7 @@ using Unity.Mathematics;
 public struct TankProperties : IComponentData
 {
     public BlobAssetReference<TankStatsData> Blob;
-    public Entity Prefab;
+    public Entity Model;
     public float3 AimTo;
     public float CurrentLife;
     public bool Locked;

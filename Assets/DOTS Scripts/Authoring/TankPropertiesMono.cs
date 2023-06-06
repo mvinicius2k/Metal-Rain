@@ -33,10 +33,11 @@ public class TankStatsBlobAssetBaker : Baker<TankPropertiesMono>
         AddBlobAsset(ref reference, out _);
         var entity = GetEntity(TransformUsageFlags.None);
 
+
         AddComponent(entity, new TankProperties
         {
             Blob = reference,
-            Prefab = GetEntity(authoring.Model, TransformUsageFlags.Dynamic),
+            Model = GetEntity(authoring.Model, TransformUsageFlags.Dynamic),
             CurrentLife = data.MaxLife,
             AimTo = math.forward()
         });

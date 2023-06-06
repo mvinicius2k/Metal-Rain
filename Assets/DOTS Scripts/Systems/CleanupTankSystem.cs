@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Entities;
 
+[UpdateInGroup(typeof(InitializationSystemGroup))]
 public partial struct CleanupTankSystem : ISystem
 {
 
@@ -17,8 +18,9 @@ public partial struct CleanupTankSystem : ISystem
     public void OnUpdate(ref SystemState state)
     {
         var deadTanks = SystemAPI.QueryBuilder().WithAll<TankCleanup>().Build().ToEntityArray(Allocator.Temp);
+        var singleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
+        var ecb = singleton.CreateCommandBuffer(state.WorldUnmanaged);
 
-        var ecb = new EntityCommandBuffer(Allocator.Temp);
 
         //Libera todos os tanks que estão mirando no tank morto
         foreach (var allAttacked in SystemAPI.Query<AttackedTankAspect>())
@@ -36,8 +38,5 @@ public partial struct CleanupTankSystem : ISystem
             ecb.RemoveComponent<TankCleanup>(deadTanks[i]);
         }
 
-        state.Dependency.Complete();
-        ecb.Playback(state.EntityManager);
-        ecb.Dispose();
     }
 }

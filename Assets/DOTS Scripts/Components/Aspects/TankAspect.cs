@@ -7,6 +7,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEditor.VersionControl;
+using UnityEngine;
 
 public readonly partial struct TankAspect : IAspect
 {
@@ -27,7 +28,8 @@ public readonly partial struct TankAspect : IAspect
     public float RechargeTime => Properties.ValueRO.Blob.Value.Delay;
     public float3 Position => LocalTransform.ValueRO.Position;
     public Team Team => greenTeamTag.IsValid ? Team.Green : Team.Red;
-        
+    public Entity ModelEntity => Properties.ValueRO.Model;
+
     /// <summary>
     /// 
     /// </summary>
@@ -39,9 +41,9 @@ public readonly partial struct TankAspect : IAspect
         Properties.ValueRW.Locked = true;
 
         var position = LocalToWorld.ValueRO.Position;
-        var res = position - target;
+        var res = target - position;
         var normalized = math.normalize(res.ToXZ());
-        var radians = math.atan2(normalized.x, normalized.y);
+        var radians = math.atan2(normalized.x, normalized.y) - math.PI/2f;
         return radians;
         
     }
@@ -50,6 +52,7 @@ public readonly partial struct TankAspect : IAspect
     {
         //Debug.Log($"Setando mira para {target}");
         var yAngle = GetYRotation(target);
+        
         LocalTransform.ValueRW.Rotation = quaternion.EulerXYZ(0f, yAngle, 0f);
         
     }

@@ -4,8 +4,8 @@ using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
-[BurstCompile]
-[UpdateAfter(typeof(RadarSystem))]
+//[BurstCompile]
+[UpdateInGroup(typeof(VariableRateSimulationSystemGroup))]
 public partial struct AttackSystem : ISystem
 {
 
@@ -13,20 +13,21 @@ public partial struct AttackSystem : ISystem
     {
         state.RequireForUpdate<TankAttack>();
     }
-    [BurstCompile]
+    //[BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        var ecb = new EntityCommandBuffer(Allocator.TempJob);
+        var singleton = SystemAPI.GetSingleton<BeginVariableRateSimulationEntityCommandBufferSystem.Singleton>();
+        var ecb = singleton.CreateCommandBuffer(state.WorldUnmanaged);
 
         new ApplyDamageJob
         {
             Ecb = ecb,
             DeltaTime = SystemAPI.Time.DeltaTime
-        }.Schedule();
+        }.Run();
 
-        state.Dependency.Complete();
-        ecb.Playback(state.EntityManager);
-        ecb.Dispose();
+        //state.Dependency.Complete();
+        //ecb.Playback(state.EntityManager);
+        //ecb.Dispose();
     }
 
 
@@ -44,15 +45,15 @@ public partial struct ApplyDamageJob : IJobEntity
             return;
         }
 
-        
-        
-        Ecb.AppendToBuffer(aspect.TargetEntity, new Damage
-        {
-            Value = aspect.BaseProperties.Damage,
-        });
+        Debug.Log($"Append em {aspect.TargetEntity}");
 
-        if(aspect.BaseProperties.Damage == 50f)
-            Debug.Log($"Attack de {aspect.BaseProperties.Damage}");
+            Ecb.AppendToBuffer(aspect.TargetEntity, new Damage
+            {
+                Value = aspect.BaseProperties.Damage,
+            });
+
+        //if(aspect.BaseProperties.Damage == 50f)
+        //    Debug.Log($"Attack de {aspect.BaseProperties.Damage}");
         aspect.Timer = aspect.BaseProperties.Delay;
     }
 }

@@ -90,7 +90,6 @@
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TankSpawnerAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Tags.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\TankSpawnerMono.cs" />
-    <Compile Include="Assets\DOTS Scripts\Components\ApplyDamage.cs" />
     <Compile Include="Assets\Common Scripts\AnaliticsUtils.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankAttack.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\RadarSystem.cs" />
@@ -99,6 +98,7 @@
     <Compile Include="Assets\DOTS Scripts\Components\WorldSelection.cs" />
     <Compile Include="Assets\OOD Scripts\SpawnFieldManager.cs" />
     <Compile Include="Assets\OOD Scripts\AnaliticsSetup.cs" />
+    <Compile Include="Assets\DOTS Scripts\Systems\InitializeTankSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankProperties.cs" />
     <Compile Include="Assets\Common Scripts\AimTarget.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\TankSpawnerSystem.cs" />
@@ -108,9 +108,11 @@
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\ApplyDamageAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankSpawner.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\SelectionWorldMono.cs" />
+    <Compile Include="Assets\DOTS Scripts\Systems\TankMovementSystem.cs" />
     <Compile Include="Assets\Common Scripts\HeavyTankStats.cs" />
     <Compile Include="Assets\OOD Scripts\TankAttack_MB.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\CameraControllerSystem.cs" />
+    <Compile Include="Assets\DOTS Scripts\Components\Aspects\TankModelAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TankAspect.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -6,9 +6,13 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
+using Unity.Physics.Systems;
 using UnityEngine;
 
-[BurstCompile, UpdateInGroup(typeof(InitializationSystemGroup))]
+[
+    BurstCompile,
+    UpdateInGroup(typeof(FixedStepSimulationSystemGroup)),
+    UpdateAfter(typeof(PhysicsSimulationGroup))]
 public partial struct RadarSystem : ISystem
 {
     private const int TankAccuracy = 3;
@@ -52,7 +56,7 @@ public partial struct RadarSystem : ISystem
         freeGreenTanks = new EntityQueryBuilder(Allocator.TempJob).WithAspect<TankAspect>().WithAll<GreenTeamTag>().WithAll<StandbyTankTag>().Build(ref state);
         freeRedTanks = new EntityQueryBuilder(Allocator.TempJob).WithAspect<TankAspect>().WithAll<RedTeamTag>().WithAll<StandbyTankTag>().Build(ref state);
 
-        var redSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
+        var redSingleton = SystemAPI.GetSingleton<BeginFixedStepSimulationEntityCommandBufferSystem.Singleton>();
         var redEcb = redSingleton.CreateCommandBuffer(state.WorldUnmanaged);
 
         var redJob = new TankRadarJob
@@ -67,7 +71,7 @@ public partial struct RadarSystem : ISystem
 
         redJob.Complete();
 
-        var greenSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
+        var greenSingleton = SystemAPI.GetSingleton<EndFixedStepSimulationEntityCommandBufferSystem.Singleton>();
         var greenEcb = greenSingleton.CreateCommandBuffer(state.WorldUnmanaged);
 
         var greenJob = new TankRadarJob
@@ -149,6 +153,9 @@ public partial struct TankRadarJob : IJobChunk
 
 
             tank.SetAimTo(target.Position); //Move a malha
+            //Ecb.SetComponent(unfilteredChunkIndex, tank.ModelEntity, new ModelLookAt { Target = target.Position });
+            //Ecb.SetComponentEnabled<ModelLookAt>(unfilteredChunkIndex, tank.ModelEntity, true);
+
             Ecb.SetComponentEnabled<TankAttack>(unfilteredChunkIndex, tank.Entity, true); //Ativa o componenete de ataque, que vai ser processado em AttackSystem
             //Registra o tanque inimigo escolhido para mirar
             tank.Attack.ValueRW.Target = target.Entity;

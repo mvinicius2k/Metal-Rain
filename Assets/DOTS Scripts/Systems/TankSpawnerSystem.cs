@@ -29,55 +29,22 @@ public partial struct TankSpawnerSystem : ISystem
                 teamToSpawn = Team.Red;
 
 
-            var teamToSpawnStr = System.Enum.GetName(typeof(Team), teamToSpawn);
-            var stopwatch = new Stopwatch();
-
-            stopwatch.Start();
             //var ecb = new EntityCommandBuffer(Allocator.TempJob);
             var singleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
             var ecb = singleton.CreateCommandBuffer(state.WorldUnmanaged);
 
-
-
-
-
-            var tanksCount = new NativeReference<int>(Allocator.TempJob);
             new TankSpawnerPointsJob
             {
                 Team = teamToSpawn,
                 Ecb = ecb.AsParallelWriter(),
-                //MaxTanks = tanksCount //Para se obter a quantidade de tanques spawnados
 
             }.ScheduleParallel();
-
-
-            //if (AnaliticsSetup.Instance != null)
-            //{
-            //    state.Dependency.Complete();
-            //    stopwatch.Stop();
-
-            //    var eventParams = new TankSpawnFieldModel
-            //    {
-            //        DOTS = AnaliticsSetup.Instance.IsDOTS,
-            //        elapsedTimeMs = (int)stopwatch.ElapsedMilliseconds,
-            //        tanksCount = tanksCount.Value,
-            //        team = teamToSpawnStr
-            //    };
-
-            //    AnalyticsService.Instance.CustomData(TankSpawnFieldModel.EventName, eventParams.GetEventParams());
-            //    AnalyticsService.Instance.Flush();
-                
-            //    //ecb.Playback(state.EntityManager);
-            //    //ecb.Dispose();
-
-            //}
-
-
-
         }
     }
 
 }
+
+
 
 [BurstCompile]
 public partial struct TankSpawnerPointsJob : IJobEntity
@@ -107,7 +74,6 @@ public partial struct TankSpawnerPointsJob : IJobEntity
             var newTank = Ecb.Instantiate(sortKey, spawnerAspect.Spawner.ValueRO.ChosenTank);
 
             Ecb.AddComponent<AliveTankTag>(sortKey, newTank);
-            //Ecb.AddComponent<CleanupTank>(sortKey, newTank);
             Ecb.SetComponent(sortKey, newTank, new LocalTransform
             {
                 Position = position,
@@ -115,7 +81,7 @@ public partial struct TankSpawnerPointsJob : IJobEntity
                 Scale = 1f
 
             });
-            
+
 
             if (spawnerAspect.Spawner.ValueRO.Team == Team.Green)
                 Ecb.AddComponent(sortKey, newTank, new GreenTeamTag());

@@ -8,7 +8,7 @@ using Unity.Entities;
 using Unity.Jobs;
 using UnityEngine;
 
-[UpdateAfter(typeof(AttackSystem))]
+[UpdateAfter(typeof(AttackSystem)), UpdateInGroup(typeof(SimulationSystemGroup))]
 public partial struct DefenseSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
@@ -17,26 +17,27 @@ public partial struct DefenseSystem : ISystem
     }
     public void OnUpdate(ref SystemState state)
     {
-        var ecb = new EntityCommandBuffer(Unity.Collections.Allocator.TempJob);
+        var singleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
+        var ecb = singleton.CreateCommandBuffer(state.WorldUnmanaged);
 
         new DigestDamageJob
         {
             Ecb = ecb,
 
-        }.Schedule();
+        }.Run();
 
 
-        state.Dependency.Complete();
-        ecb.Playback(state.EntityManager);
-        ecb.Dispose();
+        //state.Dependency.Complete();
+        //ecb.Playback(state.EntityManager);
+        //ecb.Dispose();
     }
 }
 
-[BurstCompile]
+//[BurstCompile]
 public partial struct DigestDamageJob : IJobEntity
 {
     public EntityCommandBuffer Ecb;
-    [BurstCompile]
+   // [BurstCompile]
     public void Execute(AttackedTankAspect attackedTank)
     {
         for (int i = 0; i < attackedTank.DamageBuffer.Length; i++)
@@ -54,6 +55,7 @@ public partial struct DigestDamageJob : IJobEntity
             Ecb.SetComponentEnabled<AliveTankTag>(attackedTank.Entity, false);
             Ecb.AddComponent<TankCleanup>(attackedTank.Entity);
             Ecb.DestroyEntity(attackedTank.Entity);
+            Debug.Log($"Tank destruído {attackedTank.Entity}");
             
         }
 
