@@ -16,19 +16,22 @@ public readonly partial struct TankAspect : IAspect
     public readonly RefRW<LocalTransform> LocalTransform;
     public readonly RefRW<LocalToWorld> LocalToWorld;
     private readonly EnabledRefRO<AliveTankTag> alive;
-    //private readonly EnabledRefRO<StandbyTankTag> standbyTank;
-    
-
+    //
     [Optional]
-    private readonly RefRO<GreenTeamTag> greenTeamTag;
+    public readonly RefRO<StandbyTankTag> standbyTank;
     [Optional]
-    private readonly RefRO<RedTeamTag> redTeamTag;
+    public readonly RefRO<GreenTeamTag> greenTeamTag;
     [Optional]
+    public readonly RefRO<RedTeamTag> redTeamTag;
+    [Optional]//
     public readonly RefRW<TankAttack> Attack;
     public float RechargeTime => Properties.ValueRO.Blob.Value.Delay;
     public float3 Position => LocalTransform.ValueRO.Position;
     public Team Team => greenTeamTag.IsValid ? Team.Green : Team.Red;
     public Entity ModelEntity => Properties.ValueRO.Model;
+    public int RadarAccuracy => Properties.ValueRO.Blob.Value.RadarAccuracy;
+    public float RadarDelay => Properties.ValueRO.Blob.Value.RadarDelay;
+    public bool AimLocked => !standbyTank.IsValid;
 
     /// <summary>
     /// 

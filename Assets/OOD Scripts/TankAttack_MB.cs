@@ -62,7 +62,7 @@ private void Awake()
 {
     random = new Unity.Mathematics.Random((uint)System.DateTime.Now.Ticks);
     radarCount = random.NextFloat(0f, RadarDelay);
-    attackCount = random.NextFloat(0f, Tank.Stats.Delay);
+    attackCount = random.NextFloat(0f, Tank.Stats.ShootDelay);
 }
 
 private void Update()
@@ -109,7 +109,7 @@ private void Update()
 private void Attack(Tank_MB target)
 {
     target.CurrentLife -= Tank.Stats.Damage;
-    attackCount = Tank.Stats.Delay;
+    attackCount = Tank.Stats.ShootDelay;
 
     if (target.CurrentLife <= 0f)
     {

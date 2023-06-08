@@ -13,7 +13,7 @@ public readonly partial struct ApplyDamageAspect : IAspect
     private readonly RefRO<AliveTankTag> aliveTank;//para query
     public readonly RefRW<TankAttack> Attack;
     private readonly RefRO<TankProperties> properties;
-    public float Timer { get => Attack.ValueRO.Timer; set => Attack.ValueRW.Timer = value; }
+    public float Timer { get => Attack.ValueRO.ShootTimer; set => Attack.ValueRW.ShootTimer = value; }
     public Entity TargetEntity => Attack.ValueRO.Target;
     public TankProperties Properties => properties.ValueRO;
     public ref TankStatsData BaseProperties => ref properties.ValueRO.Blob.Value;

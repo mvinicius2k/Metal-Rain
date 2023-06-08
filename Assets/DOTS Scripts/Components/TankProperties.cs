@@ -15,14 +15,6 @@ public struct TankProperties : IComponentData
     public bool Locked;
     public Team Team;
 }
-public struct RedTeamTag : IComponentData 
-{
-    public bool ValueThatWillNeverBeUsed; //Bug? ComponentTag precisa de algum campo para ser verificavel se é válido ou nao dentro de aspect
-}
-public struct GreenTeamTag : IComponentData 
-{
-    public bool ValueThatWillNeverBeUsed;
-}
 
 //
 public struct TankStatsData
@@ -31,5 +23,7 @@ public struct TankStatsData
     public float Damage;
     public float Cadence;
     public BlobString Name;
+    public int RadarAccuracy;
+    public float RadarDelay;
     public float Delay => 1f / Cadence;
 }

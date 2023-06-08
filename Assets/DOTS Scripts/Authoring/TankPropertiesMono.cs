@@ -25,6 +25,8 @@ public class TankStatsBlobAssetBaker : Baker<TankPropertiesMono>
         data.MaxLife = authoring.Stats.MaxLife;
         data.Damage = authoring.Stats.Damage;
         data.Cadence = authoring.Stats.Cadence;
+        data.RadarAccuracy = authoring.Stats.RadarAcuraccy;
+        data.RadarDelay = authoring.Stats.RadarDelay;
         builder.AllocateString(ref data.Name, authoring.Stats.Name);
 
         var reference = builder.CreateBlobAssetReference<TankStatsData>(Unity.Collections.Allocator.Persistent);
