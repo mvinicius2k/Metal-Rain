@@ -11,13 +11,16 @@ using Unity.Services.Analytics;
 using Unity.Transforms;
 using UnityEditor;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 [BurstCompile]
 public partial struct TankSpawnerSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
     {
+        //Debug.unityLogger.logEnabled = false;
         state.RequireForUpdate<TankSpawner>();
+
     }
     public void OnUpdate(ref SystemState state)
     {
@@ -81,6 +84,8 @@ public partial struct TankSpawnerPointsJob : IJobEntity
                 Scale = 1f
 
             });
+
+            
 
 
             if (spawnerAspect.Spawner.ValueRO.Team == Team.Green)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Unity.Burst;
 using Unity.Burst.Intrinsics;
@@ -10,9 +9,18 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
+using Unity.Transforms;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
-using RaycastHit = Unity.Physics.RaycastHit;
+
+
+public struct TankChildren
+{
+    public Entity Model;
+    public LocalTransform FirePoint;
+
+    
+}
 
 [
     BurstCompile,
@@ -26,7 +34,7 @@ public partial struct RadarSystem : ISystem
     private bool endgame;
     private EntityQuery redTanks, freeRedTanks;
     private EntityQuery greenTanks, freeGreenTanks;
-
+    private uint TankLayer;
 
     public void OnCreate(ref SystemState state)
     {
@@ -47,8 +55,8 @@ public partial struct RadarSystem : ISystem
 
         //Todos os tanks do time vermelho vivos
 
-        greenTanks = new EntityQueryBuilder(Allocator.TempJob).WithAspect<TankAspect>().WithAll<GreenTeamTag>().Build(ref state);
-        redTanks = new EntityQueryBuilder(Allocator.TempJob).WithAspect<TankAspect>().WithAll<RedTeamTag>().Build(ref state);
+        greenTanks = new EntityQueryBuilder(Allocator.TempJob).WithAspect<TankAspect>().WithAll<GreenTeamTag>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState).Build(ref state);
+        redTanks = new EntityQueryBuilder(Allocator.TempJob).WithAspect<TankAspect>().WithAll<RedTeamTag>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState).Build(ref state);
 
         //Se não houver nenhum tanque em algum dos lados, gameover
         if (redTanks.IsEmpty || greenTanks.IsEmpty)
@@ -58,8 +66,8 @@ public partial struct RadarSystem : ISystem
             return;
         }
 
-        freeGreenTanks = new EntityQueryBuilder(Allocator.TempJob).WithAspect<TankAspect>().WithAll<GreenTeamTag>().WithAll<StandbyTankTag>().Build(ref state);
-        freeRedTanks = new EntityQueryBuilder(Allocator.TempJob).WithAspect<TankAspect>().WithAll<RedTeamTag>().WithAll<StandbyTankTag>().Build(ref state);
+        //freeGreenTanks = new EntityQueryBuilder(Allocator.TempJob).WithAspect<TankAspect>().WithAll<GreenTeamTag>().WithAll<StandbyTankTag>().Build(ref state);
+        //freeRedTanks = new EntityQueryBuilder(Allocator.TempJob).WithAspect<TankAspect>().WithAll<RedTeamTag>().WithAll<StandbyTankTag>().Build(ref state);
 
 
 
@@ -73,8 +81,10 @@ public partial struct RadarSystem : ISystem
         var greenColliders = new NativeArray<Entity>(greenTanksCount, Allocator.TempJob);
         var redColliders = new NativeArray<Entity>(redTanksCount, Allocator.TempJob);
 
+        
+
         int greenIdx = 0, redIdx = 0;
-        foreach (var tank in SystemAPI.Query<TankAspect>())
+        foreach (var tank in SystemAPI.Query<TankAspect>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
         {
             if (tank.Team == Team.Green)
                 greenColliders[greenIdx++] = tank.ModelEntity;
@@ -91,12 +101,12 @@ public partial struct RadarSystem : ISystem
             Random = new Unity.Mathematics.Random(50),
             TankAspectTypeHandle = new TankAspect.TypeHandle(ref state),
             EnemiesCount = greenTanksCount,
-            EnemyLayer = ((uint)LayerMask.GetMask(Constants.LayerTank)),
+            EnemyLayer = (uint)Layer.Tank,
             Physics = physicsWorld,
             DeltaTime = SystemAPI.Time.DeltaTime
             
 
-        }.ScheduleParallel(freeRedTanks, state.Dependency);
+        }.ScheduleParallel(redTanks, state.Dependency);
 
         redJob.Complete();
 
@@ -111,10 +121,10 @@ public partial struct RadarSystem : ISystem
             Random = new Unity.Mathematics.Random(50),
             TankAspectTypeHandle = new TankAspect.TypeHandle(ref state),
             EnemiesCount = redTanksCount,
-            EnemyLayer = ((uint)LayerMask.GetMask(Constants.LayerTank)),
+            EnemyLayer = (uint) Layer.Tank,
             Physics = physicsWorld,
             DeltaTime = SystemAPI.Time.DeltaTime
-        }.ScheduleParallel(freeGreenTanks, redJob);
+        }.ScheduleParallel(greenTanks, redJob);
 
         greenJob.Complete();
     }
@@ -123,16 +133,7 @@ public partial struct RadarSystem : ISystem
 
 
 }
-
-public struct AimTarget
-{
-    public Entity Entity;
-    public float3 Position;
-    public float Distance;
-
-}
-
-//    [BurstCompile]
+[BurstCompile]
 public partial struct TankRadarJob : IJobChunk
 {
     [ReadOnly]
@@ -207,13 +208,13 @@ public partial struct TankRadarJob : IJobChunk
 
     public bool TryChoose(in TankAspect tank, in NativeArray<AimTarget> enemies, int accuracy, out AimTarget chosed)
     {
-
+        
         var mostClosest = new NativeList<AimTarget>(accuracy, Allocator.Temp);
         for (int i = 0; i < enemies.Length; i += accuracy)
         {
             var input = new RaycastInput
             {
-                Start = tank.Position,
+                Start = tank.CenterWorld,
                 End = enemies[i].Position,
                 Filter = new CollisionFilter
                 {
@@ -223,7 +224,10 @@ public partial struct TankRadarJob : IJobChunk
                 }
             };
 
-            var collector = new IgnoreEntitiesCollector(new NativeArray<Entity>(new Entity[] { tank.ModelEntity }, Allocator.Temp));
+            Debug.DrawRay(input.Start, input.End - input.Start, tank.Team == Team.Green ? Color.green : Color.red, 1f);
+
+
+            var collector = new IgnoreEntitiesCollector(tank.ModelEntity);
 
             var sucess = Physics.CastRay(input, ref collector);
             if (sucess && EnemyModels.Contains(collector.ClosestHit.Entity))
@@ -268,14 +272,18 @@ public partial struct TankRadarJob : IJobChunk
             if(tank.Attack.ValueRO.RadarTimer > 0f)
             {
                 tank.Attack.ValueRW.RadarTimer -= DeltaTime;
+                if(tank.Team == Team.Red)
+                {
+                    //Debug.Log($"Diminuído para {tank.Attack.ValueRO.RadarTimer}");
+                }
                 continue;
             }
 
             
 
-            if (tank.AimLocked)
+            if (!tank.IsFree)
             {
-                Debug.Log($"{tank.Entity} já está mirando");
+                //Debug.Log($"{tank.Entity} já está mirando");
                 continue;
             } else
             {
@@ -343,41 +351,5 @@ public partial struct TankRadarJob : IJobChunk
 
 
         }
-    }
-}
-
-public struct DistanceComparer : IComparer<AimTarget>
-{
-    public int Compare(AimTarget x, AimTarget y)
-    => x.Distance.CompareTo(y.Distance);
-}
-public struct IgnoreEntitiesCollector : ICollector<RaycastHit>
-{
-    public NativeArray<Entity> Ignore;
-
-    public bool EarlyOutOnFirstHit => false;
-    public RaycastHit ClosestHit;
-    public float MaxFraction { get; private set; }
-
-    public int NumHits { get; private set; }
-
-    public IgnoreEntitiesCollector(NativeArray<Entity> ignore)
-    {
-        ClosestHit = default;
-        Ignore = ignore;
-        MaxFraction = 1f;
-        NumHits = 0;
-    }
-
-    public bool AddHit(RaycastHit hit)
-    {
-
-        if (!Ignore.Contains(hit.Entity))
-        {
-            ClosestHit = hit;
-            return true;
-        }
-        else
-            return false;
     }
 }

@@ -17,8 +17,8 @@ public readonly partial struct TankAspect : IAspect
     public readonly RefRW<LocalToWorld> LocalToWorld;
     private readonly EnabledRefRO<AliveTankTag> alive;
     //
-    [Optional]
-    public readonly RefRO<StandbyTankTag> standbyTank;
+    //[Optional]
+    public readonly EnabledRefRW<StandbyTankTag> standbyTank;
     [Optional]
     public readonly RefRO<GreenTeamTag> greenTeamTag;
     [Optional]
@@ -27,11 +27,12 @@ public readonly partial struct TankAspect : IAspect
     public readonly RefRW<TankAttack> Attack;
     public float RechargeTime => Properties.ValueRO.Blob.Value.Delay;
     public float3 Position => LocalTransform.ValueRO.Position;
+    public float3 CenterWorld => Properties.ValueRO.Center + Position;
     public Team Team => greenTeamTag.IsValid ? Team.Green : Team.Red;
     public Entity ModelEntity => Properties.ValueRO.Model;
     public int RadarAccuracy => Properties.ValueRO.Blob.Value.RadarAccuracy;
     public float RadarDelay => Properties.ValueRO.Blob.Value.RadarDelay;
-    public bool AimLocked => !standbyTank.IsValid;
+    public bool IsFree => standbyTank.ValueRO;
 
     /// <summary>
     /// 
@@ -41,7 +42,7 @@ public readonly partial struct TankAspect : IAspect
     public float GetYRotation(float3 target)
     {
         Properties.ValueRW.AimTo = target;
-        Properties.ValueRW.Locked = true;
+        //Properties.ValueRW.Locked = true;
 
         var position = LocalToWorld.ValueRO.Position;
         var res = target - position;

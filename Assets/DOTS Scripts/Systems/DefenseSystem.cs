@@ -55,7 +55,7 @@ public partial struct DigestDamageJob : IJobEntity
             Ecb.SetComponentEnabled<AliveTankTag>(attackedTank.Entity, false);
             Ecb.AddComponent<TankCleanup>(attackedTank.Entity);
             Ecb.DestroyEntity(attackedTank.Entity);
-            Debug.Log($"Tank destruído {attackedTank.Entity}");
+            //Debug.Log($"Tank destruído {attackedTank.Entity}");
             
         }
 

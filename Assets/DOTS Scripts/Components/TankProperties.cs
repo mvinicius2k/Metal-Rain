@@ -12,8 +12,8 @@ public struct TankProperties : IComponentData
     public Entity Model;
     public float3 AimTo;
     public float CurrentLife;
-    public bool Locked;
-    public Team Team;
+    public Entity FirePoint;
+    public float3 Center;
 }
 
 //

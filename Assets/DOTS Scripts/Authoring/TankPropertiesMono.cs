@@ -5,13 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 using UnityEngine;
 
 public class TankPropertiesMono : MonoBehaviour
 {
     public TankStatsBase Stats;
     public GameObject Model;
-    
+    public Transform FirePoint;
+    public Transform Center;
+
 }
 
 public class TankStatsBlobAssetBaker : Baker<TankPropertiesMono>
@@ -35,13 +38,15 @@ public class TankStatsBlobAssetBaker : Baker<TankPropertiesMono>
         AddBlobAsset(ref reference, out _);
         var entity = GetEntity(TransformUsageFlags.None);
 
-
+        var model = GetEntity(authoring.Model, TransformUsageFlags.Dynamic);
         AddComponent(entity, new TankProperties
         {
             Blob = reference,
-            Model = GetEntity(authoring.Model, TransformUsageFlags.Dynamic),
+            Model = model,
             CurrentLife = data.MaxLife,
-            AimTo = math.forward()
+            AimTo = math.forward(),
+            FirePoint = GetEntity(authoring.FirePoint, TransformUsageFlags.Dynamic),
+            Center = authoring.Center.position
         });
         AddSharedComponent(entity, new TankRandom
         {
@@ -51,6 +56,7 @@ public class TankStatsBlobAssetBaker : Baker<TankPropertiesMono>
         SetComponentEnabled<TankAttack>(entity, false);
         AddComponent<StandbyTankTag>(entity);
         AddBuffer<Damage>(entity);
+        
         //AddBuffer<TargetedTank>(entity);
         //SetComponentEnabled<TankAttack>(entity, true);
         //AddComponent<CleanupTank>(entity);

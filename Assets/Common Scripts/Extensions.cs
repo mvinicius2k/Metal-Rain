@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Mathematics;
+using Unity.Physics;
 using UnityEngine;
 
 public static class Extensions
@@ -46,6 +47,8 @@ public static class Extensions
     public static float2 ToXZ(this float3 vector)
         => new float2(vector.x, vector.z);
 
+    //public static float GetDistanceOf(this in Unity.Physics.RaycastHit hit, float3 origin)
+    //    => math.distance(hit., origin);
 
     [Obsolete]
     public static NativeArray<T> MinN<T>(this in NativeArray<T> array, int n) where T : struct, IComparable<T>

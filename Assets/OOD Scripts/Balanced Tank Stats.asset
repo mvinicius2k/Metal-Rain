@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Balanced Tank Stats
   m_EditorClassIdentifier: 
   MaxLife: 100
-  Damage: 0
+  Damage: 25
   Cadence: 0.5
   Name: Tanque Comum
   RadarAcuraccy: 3

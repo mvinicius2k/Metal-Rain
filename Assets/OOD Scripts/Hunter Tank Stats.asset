@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Hunter Tank Stats
   m_EditorClassIdentifier: 
   MaxLife: 100
-  Damage: 0
+  Damage: 95
   Cadence: 0.14285715
   Name: "Tanque Ca\xE7ador"
   RadarAcuraccy: 1

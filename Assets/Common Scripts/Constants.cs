@@ -28,5 +28,7 @@ public static class Constants
     public const string TagRedTeam = "Red Team";
     public const string TagGreenTeam = "Green Team";
 
+    //public static uint TankLayer = (uint) LayerMask.GetMask(Constants.LayerTank);
+
 }
 
