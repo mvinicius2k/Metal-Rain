@@ -87,6 +87,7 @@ public partial struct RadarSystem : ISystem
         int greenIdx = 0, redIdx = 0;
         foreach (var tank in SystemAPI.Query<TankAspect>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
         {
+            
             if (tank.Team == Team.Green)
                 greenColliders[greenIdx++] = tank.ModelEntity;
             else
@@ -242,7 +243,7 @@ public partial struct TankRadarJob : IJobChunk
             if (sucess && EnemyModels.Contains(collector.ClosestHit.Entity))
             {
 
-                Debug.Log($"{tank.Entity} sucesso para {collector.ClosestHit.Entity}");
+                //Debug.Log($"{tank.Entity} sucesso para {collector.ClosestHit.Entity}");
                 mostClosest.Add(enemies[i]);
 
                 if (mostClosest.Length == accuracy || i == mostClosest.Length - 1)
@@ -254,7 +255,7 @@ public partial struct TankRadarJob : IJobChunk
             }
             else
             {
-                Debug.Log($"{tank.Entity} bloqueado por {collector.ClosestHit.Entity}");
+                //Debug.Log($"{tank.Entity} bloqueado por {collector.ClosestHit.Entity}");
             }
 
         }
@@ -295,7 +296,7 @@ public partial struct TankRadarJob : IJobChunk
             }
             else
             {
-                Debug.Log($"{tank.Entity} procurando");
+                //Debug.Log($"{tank.Entity} procurando");
                 tank.Attack.ValueRW.RadarTimer = tank.RadarDelay;
             }
 
@@ -309,13 +310,13 @@ public partial struct TankRadarJob : IJobChunk
 
             tank.SetAimTo(enemy.Position); //Move a malha
 
+            tank.Attack.ValueRW.Target = enemy.Entity;
             Ecb.SetComponentEnabled<TankAttack>(unfilteredChunkIndex, tank.Entity, true); //Ativa o componenete de ataque, que vai ser processado em AttackSystem
                                                                                           //Registra o tanque inimigo escolhido para mirar
-            tank.Attack.ValueRW.Target = enemy.Entity;
 
             //Não é mais um tanque livre
             Ecb.SetComponentEnabled<StandbyTankTag>(unfilteredChunkIndex, tank.Entity, false);
-
+            Debug.Log($"{tank.Entity} mirará em {enemy.Entity}");
 
 
         }

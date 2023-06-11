@@ -15,7 +15,8 @@ public readonly partial struct TankAspect : IAspect
     public readonly RefRW<TankProperties> Properties;
     public readonly RefRW<LocalTransform> LocalTransform;
     public readonly RefRW<LocalToWorld> LocalToWorld;
-    private readonly EnabledRefRO<AliveTankTag> alive;
+    public readonly RefRO<AliveTankTag> alive;
+    public readonly DynamicBuffer<Damage> Damage;
     //
     //[Optional]
     public readonly EnabledRefRW<StandbyTankTag> standbyTank;
