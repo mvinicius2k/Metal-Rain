@@ -72,8 +72,6 @@ public partial struct RadarSystem : ISystem
 
 
 
-        var redSingleton = SystemAPI.GetSingleton<BeginFixedStepSimulationEntityCommandBufferSystem.Singleton>();
-        var redEcb = redSingleton.CreateCommandBuffer(state.WorldUnmanaged);
         var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().PhysicsWorld;
 
         var greenTanksCount = greenTanks.CalculateEntityCount();
@@ -82,7 +80,7 @@ public partial struct RadarSystem : ISystem
         var greenColliders = new NativeArray<Entity>(greenTanksCount, Allocator.TempJob);
         var redColliders = new NativeArray<Entity>(redTanksCount, Allocator.TempJob);
 
-
+        var allTanks = SystemAPI.QueryBuilder().WithAspect<TankAspect>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState).Build();
 
         int greenIdx = 0, redIdx = 0;
         foreach (var tank in SystemAPI.Query<TankAspect>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
@@ -94,40 +92,69 @@ public partial struct RadarSystem : ISystem
                 redColliders[redIdx++] = tank.ModelEntity;
         }
 
-        var redJob = new TankRadarJob
+        var ecb = new EntityCommandBuffer(Allocator.TempJob);
+        new TankRadarJob
         {
-            EnemyModels = greenColliders,
-            EnemiesChunks = greenTanks.ToArchetypeChunkArray(Allocator.TempJob),
-            Ecb = redEcb.AsParallelWriter(),
+            GreenTargets = new TargetProperties
+            {
+                Count = redTanksCount,
+                Models = redColliders,
+                TankChunks = redTanks.ToArchetypeChunkArray(Allocator.TempJob),
+                
+            },
+            RedTargets = new TargetProperties
+            {
+                Count = greenTanksCount,
+                Models = greenColliders,
+                TankChunks = greenTanks.ToArchetypeChunkArray(Allocator.TempJob),
+
+            },
+            Ecb = ecb.AsParallelWriter(),
             Random = new Unity.Mathematics.Random(50),
             TankAspectTypeHandle = new TankAspect.TypeHandle(ref state),
-            EnemiesCount = greenTanksCount,
             EnemyLayer = (uint)Layer.Tank,
             Physics = physicsWorld,
             DeltaTime = SystemAPI.Time.DeltaTime
+        }.ScheduleParallel(allTanks, state.Dependency).Complete();
+
+        state.Dependency.Complete();
+        ecb.Playback(state.EntityManager);
+        ecb.Dispose();
+
+        //var redJob = new TankRadarJob
+        //{
+        //    EnemyModels = greenColliders,
+        //    EnemiesChunks = greenTanks.ToArchetypeChunkArray(Allocator.TempJob),
+        //    Ecb = redEcb.AsParallelWriter(),
+        //    Random = new Unity.Mathematics.Random(50),
+        //    TankAspectTypeHandle = new TankAspect.TypeHandle(ref state),
+        //    EnemiesCount = greenTanksCount,
+        //    EnemyLayer = (uint)Layer.Tank,
+        //    Physics = physicsWorld,
+        //    DeltaTime = SystemAPI.Time.DeltaTime
 
 
-        }.ScheduleParallel(redTanks, state.Dependency);
+        //}.ScheduleParallel(redTanks, state.Dependency);
 
-        redJob.Complete();
+        //redJob.Complete();
 
-        var greenSingleton = SystemAPI.GetSingleton<EndFixedStepSimulationEntityCommandBufferSystem.Singleton>();
-        var greenEcb = greenSingleton.CreateCommandBuffer(state.WorldUnmanaged);
+        //var greenSingleton = SystemAPI.GetSingleton<EndFixedStepSimulationEntityCommandBufferSystem.Singleton>();
+        //var greenEcb = greenSingleton.CreateCommandBuffer(state.WorldUnmanaged);
 
-        var greenJob = new TankRadarJob
-        {
-            EnemyModels = redColliders,
-            EnemiesChunks = redTanks.ToArchetypeChunkArray(Allocator.TempJob),
-            Ecb = greenEcb.AsParallelWriter(),
-            Random = new Unity.Mathematics.Random(50),
-            TankAspectTypeHandle = new TankAspect.TypeHandle(ref state),
-            EnemiesCount = redTanksCount,
-            EnemyLayer = (uint)Layer.Tank,
-            Physics = physicsWorld,
-            DeltaTime = SystemAPI.Time.DeltaTime
-        }.ScheduleParallel(greenTanks, redJob);
+        //var greenJob = new TankRadarJob
+        //{
+        //    EnemyModels = redColliders,
+        //    EnemiesChunks = redTanks.ToArchetypeChunkArray(Allocator.TempJob),
+        //    Ecb = greenEcb.AsParallelWriter(),
+        //    Random = new Unity.Mathematics.Random(50),
+        //    TankAspectTypeHandle = new TankAspect.TypeHandle(ref state),
+        //    EnemiesCount = redTanksCount,
+        //    EnemyLayer = (uint)Layer.Tank,
+        //    Physics = physicsWorld,
+        //    DeltaTime = SystemAPI.Time.DeltaTime
+        //}.ScheduleParallel(greenTanks, redJob);
 
-        greenJob.Complete();
+        //greenJob.Complete();
 
 
     }
@@ -147,29 +174,28 @@ public struct TargetProperties
 public partial struct TankRadarJob : IJobChunk
 {
     [ReadOnly]
-    public NativeArray<Entity> EnemyModels;
-    [ReadOnly]
-    public NativeArray<ArchetypeChunk> EnemiesChunks;
+    public TargetProperties RedTargets, GreenTargets;
+    //[ReadOnly]
+    //public NativeArray<ArchetypeChunk> EnemiesChunks;
     public TankAspect.TypeHandle TankAspectTypeHandle;
     public Unity.Mathematics.Random Random;
     public EntityCommandBuffer.ParallelWriter Ecb;
-    public int EnemiesCount;
     [ReadOnly]
     public PhysicsWorld Physics;
     public uint EnemyLayer;
     public float DeltaTime;
 
     //private NativeArray<AimTarget> EnemyDistances;
-    public NativeArray<AimTarget> RadarTank(TankAspect tank, int sortkey = 0)
+    public NativeArray<AimTarget> RadarTank(TankAspect tank, in NativeArray<ArchetypeChunk> enemiesChunks, int EnemiesCount)
     {
         //var targets = new NativeArray<AimTarget>(Accuracy, Allocator.Temp);
         var startPosition = tank.LocalTransform.ValueRO.Position;
         var enemyDistances = new NativeArray<AimTarget>(EnemiesCount, Allocator.Temp);
         var flatIndex = 0;
 
-        for (int i = 0; i < EnemiesChunks.Length; i++)
+        for (int i = 0; i < enemiesChunks.Length; i++)
         {
-            var enemies = TankAspectTypeHandle.Resolve(EnemiesChunks[i]);
+            var enemies = TankAspectTypeHandle.Resolve(enemiesChunks[i]);
             for (int j = 0; j < enemies.Length; j++)
             {
                 var distance = math.distance(startPosition, enemies[j].Position);
@@ -216,7 +242,7 @@ public partial struct TankRadarJob : IJobChunk
         //Ecb.SetComponentEnabled<StandbyTankTag>(unfilteredChunkIndex, tank.Entity, false);
     }
 
-    public bool TryChoose(in TankAspect tank, in NativeArray<AimTarget> enemies, int accuracy, out AimTarget chosed)
+    public bool TryChoose(in TankAspect tank, in NativeArray<AimTarget> enemies, in NativeArray<Entity> enemyModels, int accuracy, out AimTarget chosed)
     {
 
         var mostClosest = new NativeList<AimTarget>(accuracy, Allocator.Temp);
@@ -240,7 +266,7 @@ public partial struct TankRadarJob : IJobChunk
             var collector = new IgnoreEntitiesCollector(tank.ModelEntity);
 
             var sucess = Physics.CastRay(input, ref collector);
-            if (sucess && EnemyModels.Contains(collector.ClosestHit.Entity))
+            if (sucess && enemyModels.Contains(collector.ClosestHit.Entity))
             {
 
                 //Debug.Log($"{tank.Entity} sucesso para {collector.ClosestHit.Entity}");
@@ -300,9 +326,11 @@ public partial struct TankRadarJob : IJobChunk
                 tank.Attack.ValueRW.RadarTimer = tank.RadarDelay;
             }
 
-            var enemies = RadarTank(tank);
+            var targets = tank.Team == Team.Green ? GreenTargets : RedTargets;
 
-            var sucess = TryChoose(in tank, in enemies, tank.RadarAccuracy, out var enemy);
+            var enemies = RadarTank(tank, targets.TankChunks, targets.Count);
+
+            var sucess = TryChoose(in tank, in enemies, targets.Models, tank.RadarAccuracy, out var enemy);
 
             if (!sucess)
                 continue;
