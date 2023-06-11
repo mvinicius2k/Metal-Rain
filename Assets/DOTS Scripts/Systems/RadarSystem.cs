@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using Unity.Burst;
 using Unity.Burst.Intrinsics;
@@ -19,13 +20,13 @@ public struct TankChildren
     public Entity Model;
     public LocalTransform FirePoint;
 
-    
+
 }
 
 [
     BurstCompile,
     UpdateInGroup(typeof(FixedStepSimulationSystemGroup)),
-    UpdateAfter(typeof(PhysicsSimulationGroup))]
+    ]
 public partial struct RadarSystem : ISystem
 {
     //private const int TankAccuracy = 3;
@@ -81,7 +82,7 @@ public partial struct RadarSystem : ISystem
         var greenColliders = new NativeArray<Entity>(greenTanksCount, Allocator.TempJob);
         var redColliders = new NativeArray<Entity>(redTanksCount, Allocator.TempJob);
 
-        
+
 
         int greenIdx = 0, redIdx = 0;
         foreach (var tank in SystemAPI.Query<TankAspect>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
@@ -91,7 +92,6 @@ public partial struct RadarSystem : ISystem
             else
                 redColliders[redIdx++] = tank.ModelEntity;
         }
-
 
         var redJob = new TankRadarJob
         {
@@ -104,7 +104,7 @@ public partial struct RadarSystem : ISystem
             EnemyLayer = (uint)Layer.Tank,
             Physics = physicsWorld,
             DeltaTime = SystemAPI.Time.DeltaTime
-            
+
 
         }.ScheduleParallel(redTanks, state.Dependency);
 
@@ -121,18 +121,27 @@ public partial struct RadarSystem : ISystem
             Random = new Unity.Mathematics.Random(50),
             TankAspectTypeHandle = new TankAspect.TypeHandle(ref state),
             EnemiesCount = redTanksCount,
-            EnemyLayer = (uint) Layer.Tank,
+            EnemyLayer = (uint)Layer.Tank,
             Physics = physicsWorld,
             DeltaTime = SystemAPI.Time.DeltaTime
         }.ScheduleParallel(greenTanks, redJob);
 
         greenJob.Complete();
+
+
     }
 
 
+}
 
+public struct TargetProperties
+{
+    public NativeArray<Entity> Models;
+    public NativeArray<ArchetypeChunk> TankChunks;
+    public int Count;
 
 }
+
 [BurstCompile]
 public partial struct TankRadarJob : IJobChunk
 {
@@ -208,7 +217,7 @@ public partial struct TankRadarJob : IJobChunk
 
     public bool TryChoose(in TankAspect tank, in NativeArray<AimTarget> enemies, int accuracy, out AimTarget chosed)
     {
-        
+
         var mostClosest = new NativeList<AimTarget>(accuracy, Allocator.Temp);
         for (int i = 0; i < enemies.Length; i += accuracy)
         {
@@ -220,7 +229,7 @@ public partial struct TankRadarJob : IJobChunk
                 {
                     BelongsTo = EnemyLayer,
                     CollidesWith = EnemyLayer,
-                    
+
                 }
             };
 
@@ -254,8 +263,6 @@ public partial struct TankRadarJob : IJobChunk
 
         chosed = new AimTarget();
         return false;
-
-
     }
 
     [BurstCompile]
@@ -269,23 +276,24 @@ public partial struct TankRadarJob : IJobChunk
         {
             var tank = tanks[tankIndex];
 
-            if(tank.Attack.ValueRO.RadarTimer > 0f)
+            if (tank.Attack.ValueRO.RadarTimer > 0f)
             {
                 tank.Attack.ValueRW.RadarTimer -= DeltaTime;
-                if(tank.Team == Team.Red)
+                if (tank.Team == Team.Red)
                 {
                     //Debug.Log($"Diminuído para {tank.Attack.ValueRO.RadarTimer}");
                 }
                 continue;
             }
 
-            
+
 
             if (!tank.IsFree)
             {
                 //Debug.Log($"{tank.Entity} já está mirando");
                 continue;
-            } else
+            }
+            else
             {
                 Debug.Log($"{tank.Entity} procurando");
                 tank.Attack.ValueRW.RadarTimer = tank.RadarDelay;
@@ -309,47 +317,10 @@ public partial struct TankRadarJob : IJobChunk
             Ecb.SetComponentEnabled<StandbyTankTag>(unfilteredChunkIndex, tank.Entity, false);
 
 
-            ////EnemyDistances = new NativeArray<AimTarget>(EnemiesCount, Allocator.Temp);
-
-            ////var targets = new NativeArray<AimTarget>(Accuracy, Allocator.Temp);
-            //var startPosition = tank.LocalTransform.ValueRO.Position;
-
-            //var enemyDistances = new NativeArray<AimTarget>(EnemiesChunks.Length, Allocator.Temp);
-            //for (int i = 0; i < EnemiesChunks.Length; i++)
-            //{
-            //    var enemyChunk = EnemiesChunks[i];
-            //    var enemiesChunk = TankAspectTypeHandle.Resolve(enemyChunk);
-
-            //    for (int j = 0; j < enemiesChunk.Length; j++)
-            //    {
-            //        var distance = math.distance(startPosition, enemiesChunk[j].Position);
-
-            //        //for (int k = 0; k < targets.Length; k++)
-            //        //{
-            //        //    if (distance < targets[k].Distance || targets[k].Entity == Entity.Null)
-            //        //    {
-            //        //        targets[k] = new AimTarget { 
-            //        //            Distance = distance,
-            //        //            Position = enemiesChunk[j].Position,
-            //        //            Entity = enemiesChunk[j].Entity
-            //        //        };
-
-            //        //        targets.Sort(new DistanceComparer());
-            //        //        break;
-            //        //    }
-            //        //}
-            //    }
-
-            //}
-
-
-
-            // var ceil = math.min(enemies.Length, Accuracy);
-            //var index = Random.NextInt(0, enemies.Length);
-            //var target = enemies[index];
-
-
 
         }
+
+
     }
 }
+

@@ -8,7 +8,7 @@ using Unity.Entities;
 using Unity.Jobs;
 using UnityEngine;
 
-[UpdateAfter(typeof(AttackSystem)), UpdateInGroup(typeof(SimulationSystemGroup))]
+[UpdateInGroup(typeof(LateSimulationSystemGroup))]
 public partial struct DefenseSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
@@ -17,8 +17,8 @@ public partial struct DefenseSystem : ISystem
     }
     public void OnUpdate(ref SystemState state)
     {
-        var singleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
-        var ecb = singleton.CreateCommandBuffer(state.WorldUnmanaged);
+        //var singleton = SystemAPI.GetSingleton<LateSimulationSystemGroup.Singleton>();
+        var ecb = new EntityCommandBuffer(Unity.Collections.Allocator.TempJob);
 
         new DigestDamageJob
         {
@@ -27,9 +27,9 @@ public partial struct DefenseSystem : ISystem
         }.Run();
 
 
-        //state.Dependency.Complete();
-        //ecb.Playback(state.EntityManager);
-        //ecb.Dispose();
+        state.Dependency.Complete();
+        ecb.Playback(state.EntityManager);
+        ecb.Dispose();
     }
 }
 

@@ -109,6 +109,7 @@
     <Compile Include="Assets\DOTS Scripts\Systems\AimTarget.cs" />
     <Compile Include="Assets\Common Scripts\CustomColors.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\CleanupTankSystem.cs" />
+    <Compile Include="Assets\DOTS Scripts\Components\Aspects\TargetAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\ApplyDamageAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankSpawner.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\SelectionWorldMono.cs" />

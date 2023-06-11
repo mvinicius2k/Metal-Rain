@@ -13,7 +13,7 @@ using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-[BurstCompile]
+[BurstCompile, UpdateInGroup(typeof(InitializationSystemGroup))]
 public partial struct TankSpawnerSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
@@ -33,7 +33,7 @@ public partial struct TankSpawnerSystem : ISystem
 
 
             //var ecb = new EntityCommandBuffer(Allocator.TempJob);
-            var singleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
+            var singleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
             var ecb = singleton.CreateCommandBuffer(state.WorldUnmanaged);
 
             new TankSpawnerPointsJob
