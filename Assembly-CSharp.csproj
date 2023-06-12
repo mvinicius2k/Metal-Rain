@@ -110,12 +110,14 @@
     <Compile Include="Assets\Common Scripts\CustomColors.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\CleanupTankSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TargetAspect.cs" />
+    <Compile Include="Assets\OOD Scripts\Bullet_MB.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\ApplyDamageAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankSpawner.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\SelectionWorldMono.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\TankMovementSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\IgnoreEntitiesCollector.cs" />
     <Compile Include="Assets\Common Scripts\HeavyTankStats.cs" />
+    <Compile Include="Assets\OOD Scripts\Weapon_MB.cs" />
     <Compile Include="Assets\OOD Scripts\TankAttack_MB.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\CameraControllerSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TankModelAspect.cs" />

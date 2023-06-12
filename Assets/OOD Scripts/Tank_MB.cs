@@ -26,6 +26,12 @@ public class Tank_MB : MonoBehaviour
     private Team enemyTeam;
     private HashSet<TankAttack_MB> targetedBy;
 
+    public void DigestDamage(float value)
+    {
+        CurrentLife -= value;
+        if (CurrentLife <= 0f)
+            Destroy(gameObject);
+    }
 
     private void Awake()
     {

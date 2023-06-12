@@ -12,5 +12,6 @@ public abstract class TankStatsBase : ScriptableObject
     public string Name;
     public int RadarAcuraccy;
     public float RadarDelay;
+    public GameObject BulletPrefab;
     public float ShootDelay => 1f / Cadence;
 }

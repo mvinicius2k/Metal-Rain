@@ -9,12 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d700af6bf0dadb42bdaa2490ddad674, type: 3}
-  m_Name: Balanced Tank Stats
+  m_Script: {fileID: 11500000, guid: 152e1d2d730a07c48936befa36897a15, type: 3}
+  m_Name: Hunter Tank Stats
   m_EditorClassIdentifier: 
   MaxLife: 100
-  Damage: 25
-  Cadence: 0.5
-  Name: Tanque Comum
-  RadarAcuraccy: 3
+  Damage: 95
+  Cadence: 0.14285715
+  Name: "Tanque Ca\xE7ador"
+  RadarAcuraccy: 1
   RadarDelay: 1
+  BulletPrefab: {fileID: 2483450891692953497, guid: b4e8087b3ddb5d341aad497baeb2ac70,
+    type: 3}
