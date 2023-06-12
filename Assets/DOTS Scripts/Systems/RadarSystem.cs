@@ -63,7 +63,7 @@ public partial struct RadarSystem : ISystem
         if (redTanks.IsEmpty || greenTanks.IsEmpty)
         {
             endgame = true;
-            Debug.Log("Fim de jogo");
+            //Debug.Log("Fim de jogo");
             return;
         }
 
@@ -344,7 +344,7 @@ public partial struct TankRadarJob : IJobChunk
 
             //Não é mais um tanque livre
             Ecb.SetComponentEnabled<StandbyTankTag>(unfilteredChunkIndex, tank.Entity, false);
-            Debug.Log($"{tank.Entity} mirará em {enemy.Entity}");
+            //Debug.Log($"{tank.Entity} mirará em {enemy.Entity}");
 
 
         }

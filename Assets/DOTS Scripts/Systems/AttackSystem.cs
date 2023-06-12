@@ -66,19 +66,11 @@ public partial struct AttackSystem : ISystem
         }.Run();
 
 
-        try
-        {
             state.Dependency.Complete();
             ecb.Playback(state.EntityManager);
             ecb.Dispose();
 
-        }
-        catch (System.Exception e)
-        {
-            
-            Debug.Log("Erro aqui");
-            throw;
-        }
+        
 
     }
 
@@ -99,18 +91,15 @@ public partial struct ApplyDamageJob : IJobEntity
             aspect.Timer -= DeltaTime;
             return;
         }
-        if(aspect.TargetEntity == Entity.Null)
-        {
-            Debug.Log("Entidade nula");
-        }
+        
 
         //if (Entities.Contains(aspect.TargetEntity))
         //{/
         //Debug.Log("Entidade tem buffer");
         //}
-        if (!BufferLookup.HasBuffer(aspect.TargetEntity))
-            Debug.Log("Vai dar rtuim");
-        Debug.Log($"{aspect.Entity} Append em {aspect.TargetEntity}");
+        //if (!BufferLookup.HasBuffer(aspect.TargetEntity))
+        //    Debug.Log("Vai dar rtuim");
+        //Debug.Log($"{aspect.Entity} Append em {aspect.TargetEntity}");
 
             Ecb.AppendToBuffer(aspect.TargetEntity, new Damage
             {
