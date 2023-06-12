@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Entities;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Bullet_MB : MonoBehaviour
 {
@@ -15,13 +16,13 @@ public class Bullet_MB : MonoBehaviour
     public float MaxDuration = 10f;
     public Vector3 ColliderOffset;
 
-
-    public bool Stopped => !gameObject.activeSelf || colliding;
+    public bool Stopped => !gameObject.activeSelf;
 
     private float damage;
-    private bool colliding;
+    //private bool colliding;
     private Weapon_MB weapon;
 
+    
 
     private void Start()
     {
@@ -33,7 +34,7 @@ public class Bullet_MB : MonoBehaviour
         if (Stopped)
             return;
 
-        transform.Translate(Vector3.right * Speed * Time.deltaTime, Space.Self);
+        transform.Translate(transform.up * Speed * Time.deltaTime, Space.World);
     }
 
     private void FixedUpdate()
@@ -41,10 +42,9 @@ public class Bullet_MB : MonoBehaviour
         if (Stopped)
             return;
 
-        if(MaxDuration <= 0f || colliding)
+        if(MaxDuration <= 0f)
         {
-            colliding = true;
-            Destroy(gameObject);
+            weapon.BulletPool.Release(gameObject);
             return;
 
         }
@@ -57,6 +57,8 @@ public class Bullet_MB : MonoBehaviour
             if (entity != null)
             {
                 entity.DigestDamage(damage);
+                Debug.Log($"Bala atingiu {entity}");
+                weapon.BulletPool.Release(gameObject);
             }
 
         }
@@ -67,7 +69,10 @@ public class Bullet_MB : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = CustomColors.alphaRed;
+        var bak = Gizmos.matrix;
+        Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.localRotation, Vector3.one) ;
         Gizmos.DrawCube(transform.position + ColliderOffset, ColliderSize);
+        Gizmos.matrix = bak;
     }
 
     public void Initialize(Weapon_MB weapon)

@@ -97,12 +97,14 @@ public class SpawnField_MB : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        var bak = Gizmos.matrix;
+        Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
         Gizmos.color = Team == Team.Green ? CustomColors.alphaGreen : CustomColors.alphaRed;
         var center = new Vector3
         {
-            x = transform.position.x + ((StartAt.x + EndAt.x) / 2f),
-            y = transform.position.y,
-            z = transform.position.z + ((StartAt.y + EndAt.y) / 2f)
+            x = ((StartAt.x + EndAt.x) / 2f),
+            y = 0f,
+            z = ((StartAt.y + EndAt.y) / 2f)
         };
         var size = new Vector3
         {
@@ -110,9 +112,10 @@ public class SpawnField_MB : MonoBehaviour
             y = 0.5f,
             z = Mathf.Abs(StartAt.y - EndAt.y)
         };
-
         //
         Gizmos.DrawCube(center, size);
+
+        Gizmos.matrix = bak;
     }
 
 

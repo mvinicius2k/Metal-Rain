@@ -96,6 +96,7 @@ public class TankAttack_MB : MonoBehaviour
             {
                 targetedEnemy = enemy;
                 transform.right = enemy.transform.position - transform.position;
+                Weapon.FirePoint.up = enemy.transform.position - transform.position;
                 targetedEnemy.TargetedBy.Add(this);
             }
 
@@ -128,28 +129,49 @@ public class TankAttack_MB : MonoBehaviour
             return null;
         radarCount = RadarDelay;
 
-        for (int i = 0; i < enemies.Count; i += Precision)
+
+
+        var enemiesToChoose = new List<Distance<Tank_MB>>(Precision);
+        for (int i = 0; i < enemies.Count; i++)
         {
-            var tail = math.min(i + Precision, enemies.Count - 1);
+            var ray = new Ray(transform.position, enemies[i].Target.transform.position - transform.position);
+            Physics.Raycast(ray, out var info, Mathf.Infinity, LayerMask.GetMask(Constants.LayerTank));
+            if (info.collider != null && info.collider.CompareTag(Tank.SpawnField.EnemyTag))
+                enemiesToChoose.Add(enemies[i]);
 
-            var mostClosest = enemies.Skip(i).Take(tail).ToArray(); //Remover linq
-            random.Shuffle(mostClosest);
-
-            for (int j = 0; j < mostClosest.Length; j++)
-            {
-                var ray = new Ray(transform.position, mostClosest[j].Target.transform.position - transform.position);
-                Physics.Raycast(ray, out var info, Mathf.Infinity, LayerMask.GetMask(Constants.LayerTank));
-                if (info.collider != null && info.collider.CompareTag(Tank.SpawnField.EnemyTag))
-                {
-                    return mostClosest[j].Target;
-                }
-
-
-            }
-
+            if (enemiesToChoose.Count == enemiesToChoose.Capacity - 1)
+                break;
         }
+       
 
-        return null;
+        if (enemiesToChoose.Count > 0)
+        {
+            var randomIndex = random.NextInt(0, enemiesToChoose.Count - 1);
+            return enemiesToChoose[randomIndex].Target;
+        }
+        else
+            return null;
+
+        //for (int i = 0; i < enemies.Count; i += Precision)
+        //{
+        //    var tail = math.min(i + Precision, enemies.Count - 1);
+
+        //    var mostClosest = enemies.Skip(i).Take(tail).ToArray(); //Remover linq
+        //    random.Shuffle(mostClosest);
+
+        //    for (int j = 0; j < mostClosest.Length; j++)
+        //    {
+        //        var ray = new Ray(transform.position, mostClosest[j].Target.transform.position - transform.position);
+        //        Physics.Raycast(ray, out var info, Mathf.Infinity, LayerMask.GetMask(Constants.LayerTank));
+        //        if (info.collider != null && info.collider.CompareTag(Tank.SpawnField.EnemyTag))
+        //        {
+        //            return mostClosest[j].Target;
+        //        }
+
+
+        //    }
+
+        //}
 
     }
 

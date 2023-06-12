@@ -24,7 +24,8 @@ public class Weapon_MB : MonoBehaviour
 
 
 
-    private ObjectPool<GameObject> BulletPool;
+    private ObjectPool<GameObject> bulletPool;
+    public ObjectPool<GameObject> BulletPool => bulletPool;
     private float fireDelayCount;
     public TankStatsBase Data => Attack.Tank.Stats;
 
@@ -42,7 +43,8 @@ public class Weapon_MB : MonoBehaviour
     private void OnTakeFromPool(GameObject bulletObj) //Obtendo do pool e preparando
     {
         bulletObj.SetActive(true);
-        bulletObj.transform.SetPositionAndRotation(FirePoint.position, transform.rotation);
+        bulletObj.transform.position = FirePoint.position;
+        bulletObj.transform.rotation = FirePoint.rotation;
 
     }
 
@@ -60,7 +62,7 @@ public class Weapon_MB : MonoBehaviour
             return false;
         Debug.Log("Atirando");
         fireDelayCount = Data.ShootDelay;
-        var bulletObj = BulletPool.Get();
+        var bulletObj = bulletPool.Get();
         return true;
 
 
@@ -69,7 +71,7 @@ public class Weapon_MB : MonoBehaviour
 
     private void Awake()
     {
-        BulletPool = new ObjectPool<GameObject>(
+        bulletPool = new ObjectPool<GameObject>(
                         CreateBullet, OnTakeFromPool, OnReturnedToPool, OnDestroyBulletObject,
                         CheckPool, DefaultPoolSize, MaxPoolSize);
     }

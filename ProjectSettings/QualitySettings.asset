@@ -56,7 +56,6 @@ QualitySettings:
     terrainMaxTrees: 50
     excludedTargetPlatforms:
     - Server
-    - Standalone
   - serializedVersion: 3
     name: High Fidelity DOTS
     pixelLightCount: 2
@@ -107,6 +106,7 @@ QualitySettings:
     terrainMaxTrees: 50
     excludedTargetPlatforms:
     - Server
+    - Standalone
   m_TextureMipmapLimitGroupNames: []
   m_PerPlatformDefaultQuality:
     Android: 0
