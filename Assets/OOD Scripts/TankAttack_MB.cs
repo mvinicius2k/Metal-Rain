@@ -96,8 +96,9 @@ public class TankAttack_MB : MonoBehaviour
             {
                 targetedEnemy = enemy;
                 transform.right = enemy.transform.position - transform.position;
-                Weapon.FirePoint.up = enemy.transform.position - transform.position;
+                Weapon.FirePoint.up = enemy.Center.position - Weapon.FirePoint.position;
                 targetedEnemy.TargetedBy.Add(this);
+                //Debug.DrawRay(Weapon.FirePoint.position, enemy.Center.position - Weapon.FirePoint.position, Tank.Team == Team.Green ? Color.green : Color.red, 2f);
             }
 
         }

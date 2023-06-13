@@ -16,6 +16,7 @@ public class Tank_MB : MonoBehaviour
     public float CurrentLife;
     public GameObject Model;
     public UnityEvent<Tank_MB> OnDead;
+    public Transform Center;
     public Team Team => SpawnField.Team;
     
 
