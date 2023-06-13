@@ -13,9 +13,11 @@ public class TankSpawnerMono : MonoBehaviour
 {
     
     public Vector2 BlockSize, Start, End;
-    public GameObject ChosenTank;
+    //public GameObject ChosenTank;
+    public SpawnRate[] SpawnRate;
     public float Orientation;
     public Team Team;
+    public int RandomSeed = 50;
 
     private void OnDrawGizmos()
     {
@@ -50,10 +52,29 @@ public class TankSpawnerMonoBaker : Baker<TankSpawnerMono>
             BlockSize = authoring.BlockSize,
             Start = authoring.Start,
             End = authoring.End,
-            ChosenTank = GetEntity(authoring.ChosenTank, TransformUsageFlags.Dynamic),
+            //ChosenTank = GetEntity(authoring.ChosenTank, TransformUsageFlags.Dynamic),
             Team = authoring.Team,
             Orientation = authoring.Orientation * math.PI/180f
         }) ;
+
+        AddComponent<RandomGenerator>(entity, new RandomGenerator
+        {
+            Value = new Unity.Mathematics.Random((uint)authoring.RandomSeed)
+        }) ;
+
+        AddBuffer<TankSpawnerRateBuffer>(entity);
+
+        for (int i = 0; i < authoring.SpawnRate.Length; i++)
+        {
+            AppendToBuffer(entity, new TankSpawnerRateBuffer
+            {
+                Kind = authoring.SpawnRate[i].Kind,
+                Prefab = GetEntity(authoring.SpawnRate[i].TankPrefab, TransformUsageFlags.Dynamic),
+                Weight = authoring.SpawnRate[i].Weight,
+            }) ;
+        }
+
+        
 
     }
 }

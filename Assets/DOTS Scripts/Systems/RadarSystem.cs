@@ -63,7 +63,7 @@ public partial struct RadarSystem : ISystem
         if (redTanks.IsEmpty || greenTanks.IsEmpty)
         {
             endgame = true;
-            //Debug.Log("Fim de jogo");
+            Debug.Log("Fim de jogo");
             return;
         }
 
@@ -85,7 +85,7 @@ public partial struct RadarSystem : ISystem
         int greenIdx = 0, redIdx = 0;
         foreach (var tank in SystemAPI.Query<TankAspect>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
         {
-            
+
             if (tank.Team == Team.Green)
                 greenColliders[greenIdx++] = tank.ModelEntity;
             else
@@ -100,7 +100,7 @@ public partial struct RadarSystem : ISystem
                 Count = redTanksCount,
                 Models = redColliders,
                 TankChunks = redTanks.ToArchetypeChunkArray(Allocator.TempJob),
-                
+
             },
             RedTargets = new TargetProperties
             {

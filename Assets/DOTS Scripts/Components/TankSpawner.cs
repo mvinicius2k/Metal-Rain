@@ -10,7 +10,7 @@ public struct TankSpawner : IComponentData
     public float2 Start;
     public float2 End;
     public float2 BlockSize;
-    public Entity ChosenTank;
+    //public Entity ChosenTank;
     public Team Team;
     /// <summary>
     /// Em radianos

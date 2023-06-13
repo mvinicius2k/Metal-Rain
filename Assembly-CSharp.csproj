@@ -87,6 +87,7 @@
     <Compile Include="Assets\Common Scripts\Team.cs" />
     <Compile Include="Assets\Common Scripts\LightTankStats.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\AttackSystem.cs" />
+    <Compile Include="Assets\DOTS Scripts\Components\TankSpawnerRateBuffer.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TankSpawnerAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Tags.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\TankSpawnerMono.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Assets\DOTS Scripts\Systems\AimTarget.cs" />
     <Compile Include="Assets\Common Scripts\CustomColors.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\CleanupTankSystem.cs" />
+    <Compile Include="Assets\DOTS Scripts\Components\RandomGenerator.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TargetAspect.cs" />
     <Compile Include="Assets\OOD Scripts\Bullet_MB.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\ApplyDamageAspect.cs" />

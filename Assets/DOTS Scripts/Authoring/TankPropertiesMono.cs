@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,6 +56,7 @@ public class TankStatsBlobAssetBaker : Baker<TankPropertiesMono>
         AddComponent(entity, new TankAttack());
         SetComponentEnabled<TankAttack>(entity, false);
         AddComponent<StandbyTankTag>(entity);
+        AddComponent<AliveTankTag>(entity);
         AddBuffer<Damage>(entity);
         
         //AddBuffer<TargetedTank>(entity);
