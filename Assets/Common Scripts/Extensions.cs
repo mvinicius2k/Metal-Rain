@@ -24,6 +24,17 @@ public static class Extensions
             array[k] = temp;
         }
     }
+    public static void Shuffle<T>(this Unity.Mathematics.Random rng, List<T> array)
+    {
+        int n = array.Count;
+        while (n > 1)
+        {
+            int k = rng.NextInt(n--);
+            T temp = array[n];
+            array[n] = array[k];
+            array[k] = temp;
+        }
+    }
     public static T GetRandom<T>(this T[] sources)
     {
         var clip = UnityEngine.Random.Range(0, sources.Length);
@@ -33,6 +44,18 @@ public static class Extensions
     #endregion
 
     public static void Shuffle<T>(this Unity.Mathematics.Random rng, ref NativeArray<T> array) where T : struct
+    {
+        int n = array.Length;
+        while (n > 1)
+        {
+            int k = rng.NextInt(n--);
+            T temp = array[n];
+            array[n] = array[k];
+            array[k] = temp;
+        }
+    }
+
+    public static void Shuffle<T>(this Unity.Mathematics.Random rng, ref NativeList<T> array) where T : unmanaged
     {
         int n = array.Length;
         while (n > 1)

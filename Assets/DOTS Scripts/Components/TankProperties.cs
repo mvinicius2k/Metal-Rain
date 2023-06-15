@@ -11,9 +11,10 @@ public struct TankProperties : IComponentData
     public BlobAssetReference<TankStatsData> Blob;
     public Entity Model;
     public float3 AimTo;
-    public float CurrentLife;
+    //public float CurrentLife;
     public Entity FirePoint;
-    public float3 Center;
+    public Entity Center;
+    public Entity BulletPrefab;
 }
 
 //

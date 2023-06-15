@@ -15,6 +15,7 @@ public class TankPropertiesMono : MonoBehaviour
     public GameObject Model;
     public Transform FirePoint;
     public Transform Center;
+    public GameObject BulletPrefab;
 
 }
 
@@ -44,10 +45,14 @@ public class TankStatsBlobAssetBaker : Baker<TankPropertiesMono>
         {
             Blob = reference,
             Model = model,
-            CurrentLife = data.MaxLife,
+            BulletPrefab = GetEntity(authoring.BulletPrefab, TransformUsageFlags.Dynamic),
             AimTo = math.forward(),
             FirePoint = GetEntity(authoring.FirePoint, TransformUsageFlags.Dynamic),
-            Center = authoring.Center.position
+            Center = GetEntity(authoring.Center, TransformUsageFlags.Dynamic)
+        });
+        AddComponent(entity, new TankDefense
+        {
+            CurrentLife = data.MaxLife,
         });
         AddSharedComponent(entity, new TankRandom
         {

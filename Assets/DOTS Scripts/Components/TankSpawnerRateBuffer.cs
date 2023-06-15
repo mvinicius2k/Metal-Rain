@@ -15,7 +15,8 @@ public struct TankSpawnerRateBuffer : IBufferElementData
     public int GetTotalFrom(float size, float totalWeight)
     {
         var rate = Weight / totalWeight;
-        return (int)math.floor(size * rate);
+        var result = math.ceil(size * rate);
+        return (int) result;
     }
    
 }

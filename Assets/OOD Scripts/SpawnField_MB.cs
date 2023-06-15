@@ -20,7 +20,7 @@ public struct SpawnRate
     public int GetTotalFrom(float size, float totalWeight)
     {
         var rate = Weight / totalWeight;
-        return (int) math.floor(size * rate);
+        return (int) math.ceil(size * rate);
     }
 }
 
@@ -71,7 +71,7 @@ public class SpawnField_MB : MonoBehaviour
     public void Spawn()
     {
 
-        var list = new GameObject[Size];
+        var list = new List<GameObject>(Size);
         var xCoeficient = EndAt.x >= StartAt.x ? 1f : -1f;
         var zCoeficient = EndAt.y >= StartAt.y ? 1f : -1f;
 
@@ -81,10 +81,13 @@ public class SpawnField_MB : MonoBehaviour
             var total = SpawnRates[i].GetTotalFrom(Size, CalcWeightSum());
             for (int j = 0; j < total; j++)
             {
-                list[flatIdx++] = SpawnRates[i].TankPrefab;
+                list.Add(SpawnRates[i].TankPrefab);
+                if (list.Count == list.Capacity)
+                    goto RandomizeList;
             }
         }
         
+        RandomizeList:
         Random.Shuffle(list);
         
         flatIdx = 0;

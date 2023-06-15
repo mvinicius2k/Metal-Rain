@@ -81,19 +81,22 @@ public partial struct TankSpawnerPointsJob : IJobEntity
         var fullWeight = CalcWeightSum(in spawn);
         var flatIdx = 0;
         var coeficients = spawn.Coeficients;
-        var list = new NativeArray<Entity>(size, Allocator.Temp);
+        var list = new NativeList<Entity>(size, Allocator.Temp);
         var origin = spawn.LocalTransform.ValueRO.Position;
         var blockSize = spawn.Spawner.ValueRO.BlockSize;
-
         for (int i = 0; i < spawn.TankRates.Length; i++)
         {
             var total = spawn.TankRates[i].GetTotalFrom(size, fullWeight);
             for (int j = 0; j < total; j++)
             {
-                list[flatIdx++] = spawn.TankRates[i].Prefab;
+                list.Add(spawn.TankRates[i].Prefab);
+                if (list.Length == list.Capacity)
+                    goto RandomizeList;
+
             }
         }
 
+        RandomizeList:
         spawn.Random.ValueRW.Value.Shuffle(ref list);
 
         flatIdx = 0;
@@ -120,6 +123,7 @@ public partial struct TankSpawnerPointsJob : IJobEntity
                     Scale = 1f
 
                 });
+
 
                 if (spawn.Spawner.ValueRO.Team == Team.Green)
                     Ecb.AddComponent(newTank, new GreenTeamTag());

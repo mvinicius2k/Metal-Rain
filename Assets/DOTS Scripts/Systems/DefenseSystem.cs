@@ -8,7 +8,7 @@ using Unity.Entities;
 using Unity.Jobs;
 using UnityEngine;
 
-[UpdateInGroup(typeof(LateSimulationSystemGroup))]
+[UpdateInGroup(typeof(LateSimulationSystemGroup)), UpdateAfter(typeof(AttackSystem))]
 public partial struct DefenseSystem : ISystem
 {
     public void OnCreate(ref SystemState state)

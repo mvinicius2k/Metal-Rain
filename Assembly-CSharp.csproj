@@ -79,12 +79,17 @@
     <Compile Include="Assets\DOTS Scripts\Authoring\CameraSingleton.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\TankPropertiesMono.cs" />
     <Compile Include="Assets\Common Scripts\Extensions.cs" />
+    <Compile Include="Assets\DOTS Scripts\Components\TankDefense.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\SelectionSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankRandom.cs" />
     <Compile Include="Assets\Common Scripts\BalancedTankStats.cs" />
+    <Compile Include="Assets\DOTS Scripts\Authoring\BulletMono.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\AttackedTankAspect.cs" />
     <Compile Include="Assets\Common Scripts\TankStatsBase.cs" />
+    <Compile Include="Assets\DOTS Scripts\Components\Bullet.cs" />
     <Compile Include="Assets\Common Scripts\Team.cs" />
+    <Compile Include="Assets\DOTS Scripts\Systems\BulletSystem.cs" />
+    <Compile Include="Assets\DOTS Scripts\Components\Aspects\BulletAspect.cs" />
     <Compile Include="Assets\Common Scripts\LightTankStats.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\AttackSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankSpawnerRateBuffer.cs" />

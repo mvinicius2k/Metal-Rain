@@ -60,7 +60,7 @@ public class Weapon_MB : MonoBehaviour
         
         if(fireDelayCount > 0f)
             return false;
-        Debug.Log("Atirando");
+        //Debug.Log("Atirando");
         fireDelayCount = Data.ShootDelay;
         var bulletObj = bulletPool.Get();
         return true;

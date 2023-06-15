@@ -2,6 +2,8 @@
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Transforms;
 using UnityEngine;
 
 [BurstCompile]
@@ -27,7 +29,6 @@ public partial struct AttackSystem : ISystem
         }
 
 
-        var buffLook = state.GetBufferLookup<Damage>();
         //foreach (var aspect in SystemAPI.Query<ApplyDamageAspect>())
         //{
         //    if (aspect.Timer > 0)
@@ -57,20 +58,23 @@ public partial struct AttackSystem : ISystem
         //    aspect.Timer = aspect.BaseProperties.Delay;
         //}
 
-        new ApplyDamageJob
+        var job = new ApplyDamageJob
         {
             Ecb = ecb,
             DeltaTime = SystemAPI.Time.DeltaTime,
-            BufferLookup = buffLook,
+            TransformLookup = state.GetComponentLookup<LocalToWorld>(),
+            TankPropertiesLookup = state.GetComponentLookup<TankProperties>()
 
-        }.Run();
+            
+        }.Schedule(state.Dependency);
+
+        state.Dependency = job;
+
+        state.Dependency.Complete();
+        ecb.Playback(state.EntityManager);
+        ecb.Dispose();
 
 
-            state.Dependency.Complete();
-            ecb.Playback(state.EntityManager);
-            ecb.Dispose();
-
-        
 
     }
 
@@ -82,7 +86,9 @@ public partial struct ApplyDamageJob : IJobEntity
 {
     public float DeltaTime;
     public EntityCommandBuffer Ecb;
-    public BufferLookup<Damage> BufferLookup;
+    public ComponentLookup<LocalToWorld> TransformLookup;
+    [ReadOnly]
+    public ComponentLookup<TankProperties> TankPropertiesLookup;
     //public NativeArray<Entity> Entities;
     public void Execute(ApplyDamageAspect aspect)
     {
@@ -91,7 +97,7 @@ public partial struct ApplyDamageJob : IJobEntity
             aspect.Timer -= DeltaTime;
             return;
         }
-        
+
 
         //if (Entities.Contains(aspect.TargetEntity))
         //{/
@@ -100,11 +106,35 @@ public partial struct ApplyDamageJob : IJobEntity
         //if (!BufferLookup.HasBuffer(aspect.TargetEntity))
         //    Debug.Log("Vai dar rtuim");
         //Debug.Log($"{aspect.Entity} Append em {aspect.TargetEntity}");
+        var bullet = Ecb.Instantiate(aspect.Properties.BulletPrefab);
+        var firepointTransform = TransformLookup.GetRefRO(aspect.Properties.FirePoint);
 
-            Ecb.AppendToBuffer(aspect.TargetEntity, new Damage
-            {
-                Value = aspect.BaseProperties.Damage,
-            });
+        var enemyProperties = TankPropertiesLookup.GetRefRO(aspect.TargetEntity);
+        var enemyTransform = TransformLookup.GetRefRO(enemyProperties.ValueRO.Center);
+
+        //var enemyTransform = TransformLookup.GetRefRO(aspect.TargetEntity);
+        var rot = TransformHelpers.LookAtRotation(firepointTransform.ValueRO.Position, enemyTransform.ValueRO.Position, math.up());
+
+        //Debug.Log($"Lançando bala de {firepointTransform.ValueRO.Position}");
+        //var eulerAngle = math.normalize(enemyTransform.ValueRO.Position - firepointTransform.ValueRO.Position);
+        var comp = new LocalTransform
+        {
+            Position = firepointTransform.ValueRO.Position,
+            Rotation = rot,
+            Scale = 1f
+        };
+
+        Ecb.SetComponent(bullet, comp) ;
+
+        //Ecb.AddComponent<Bullet>(bullet, new Bullet
+        //{
+        //    Entity = bullet,
+        //    Damage = aspect.BaseProperties.Damage
+        //});
+        //Ecb.AppendToBuffer(aspect.TargetEntity, new Damage
+        //{
+        //    Value = aspect.BaseProperties.Damage,
+        //});
 
         //if(aspect.BaseProperties.Damage == 50f)
         //    Debug.Log($"Attack de {aspect.BaseProperties.Damage}");

@@ -48,7 +48,10 @@ public partial struct RadarSystem : ISystem
             return;
 
         if (Input.GetKeyDown(KeyCode.Space))
+        {
             started = true;
+            //Debug.Log("Inicinaod");
+        }
 
         if (!started)
             return;
@@ -114,7 +117,9 @@ public partial struct RadarSystem : ISystem
             TankAspectTypeHandle = new TankAspect.TypeHandle(ref state),
             EnemyLayer = (uint)Layer.Tank,
             Physics = physicsWorld,
-            DeltaTime = SystemAPI.Time.DeltaTime
+            DeltaTime = SystemAPI.Time.DeltaTime,
+            GlobalTransformLookup = state.GetComponentLookup<LocalToWorld>(),
+            //LocalTransformLookup = state.GetComponentLookup<LocalTransform>(),
         }.ScheduleParallel(allTanks, state.Dependency).Complete();
 
         state.Dependency.Complete();
@@ -184,6 +189,10 @@ public partial struct TankRadarJob : IJobChunk
     public PhysicsWorld Physics;
     public uint EnemyLayer;
     public float DeltaTime;
+    //[ReadOnly]
+    //public ComponentLookup<LocalTransform> LocalTransformLookup;
+    [ReadOnly]
+    public ComponentLookup<LocalToWorld> GlobalTransformLookup;
 
     //private NativeArray<AimTarget> EnemyDistances;
     public NativeArray<AimTarget> RadarTank(TankAspect tank, in NativeArray<ArchetypeChunk> enemiesChunks, int EnemiesCount)
@@ -198,12 +207,12 @@ public partial struct TankRadarJob : IJobChunk
             var enemies = TankAspectTypeHandle.Resolve(enemiesChunks[i]);
             for (int j = 0; j < enemies.Length; j++)
             {
-                var distance = math.distance(startPosition, enemies[j].Position);
+                var distance = math.distance(startPosition, enemies[j].GetWorldPosition(GlobalTransformLookup));
                 enemyDistances[flatIndex++] = new AimTarget
                 {
                     Distance = distance,
                     Entity = enemies[j].Entity,
-                    Position = enemies[j].Position
+                    Position = enemies[j].GetWorldPosition(GlobalTransformLookup)
                 };
 
                 //for (int k = 0; k < targets.Length; k++)
@@ -225,6 +234,7 @@ public partial struct TankRadarJob : IJobChunk
         }
 
         enemyDistances.Sort(new DistanceComparer());
+
         return enemyDistances;
         //var index = Random.NextInt(0, targets.Length);
         //var target = targets[index];
@@ -250,7 +260,7 @@ public partial struct TankRadarJob : IJobChunk
         {
             var input = new RaycastInput
             {
-                Start = tank.CenterWorld,
+                Start = tank.GetWorldPosition(in GlobalTransformLookup),
                 End = enemies[i].Position,
                 Filter = new CollisionFilter
                 {
@@ -335,8 +345,24 @@ public partial struct TankRadarJob : IJobChunk
             if (!sucess)
                 continue;
 
+            
+            tank.SetAimTo(enemy.Position, GlobalTransformLookup); //Move a malha
 
-            tank.SetAimTo(enemy.Position); //Move a malha
+            //var globalEnemyPosition = GlobalTransformLookup.GetRefRW(enemy.Entity).ValueRO.Position;
+            //var globalFirepointPosition = GlobalTransformLookup.GetRefRW(tank.FirePoint).ValueRO.Position;
+            //var localFirepointPosition = LocalTransformLookup.GetRefRW(tank.FirePoint).ValueRO.Position;
+
+            //var lookRotation = TransformHelpers.LookAtRotation(globalFirepointPosition, globalEnemyPosition, math.up());
+
+            ////var firePointLocalTransform = LocalTransformLookup.GetRefRO(tank.FirePoint);
+            //Ecb.SetComponent(unfilteredChunkIndex, tank.FirePoint, new LocalTransform
+            //{
+            //    Position = localFirepointPosition,
+            //    Rotation = lookRotation,
+            //    Scale = 1f
+            //});
+
+            //firePointLocalTransform.ValueRW.Rotation = lookRotation;
 
             tank.Attack.ValueRW.Target = enemy.Entity;
             Ecb.SetComponentEnabled<TankAttack>(unfilteredChunkIndex, tank.Entity, true); //Ativa o componenete de ataque, que vai ser processado em AttackSystem

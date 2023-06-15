@@ -34,7 +34,7 @@ public class Bullet_MB : MonoBehaviour
         if (Stopped)
             return;
 
-        transform.Translate(transform.up * Speed * Time.deltaTime, Space.World);
+        transform.Translate(Speed * Time.deltaTime * transform.up, Space.World);
     }
 
     private void FixedUpdate()
@@ -57,7 +57,7 @@ public class Bullet_MB : MonoBehaviour
             if (entity != null)
             {
                 entity.DigestDamage(damage);
-                Debug.Log($"Bala atingiu {entity}");
+                //Debug.Log($"Bala atingiu {entity}");
                 weapon.BulletPool.Release(gameObject);
             }
 
