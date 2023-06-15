@@ -43,7 +43,6 @@ public class SpawnField_MB : MonoBehaviour
     public float Orientation;
 
     private List<Tank_MB> tanks;
-    //private Stopwatch stopwatch;
     private int xLimit, zLimit;
     private Team enemyTeam;
     public Team EnemyTeam => enemyTeam;
@@ -111,27 +110,12 @@ public class SpawnField_MB : MonoBehaviour
             }
         }
 
-        //stopwatch.Stop();
-
-        //if (AnaliticsSetup.Instance == null) //Analitics desativado
-        //    return;
-
-        //var eventParams = new TankSpawnFieldModel
-        //{
-        //    elapsedTimeMs = (int)stopwatch.ElapsedMilliseconds,
-        //    tanksCount = tanks.Count,
-        //    team = teamName,
-        //    DOTS = false
-        //};
-
-        //AnalyticsService.Instance.CustomData(TankSpawnFieldModel.EventName, eventParams.GetEventParams());
-        //AnalyticsService.Instance.Flush();
+     
     }
 
     private void Awake()
     {
 
-        //    stopwatch = new Stopwatch();
         xLimit = Mathf.RoundToInt(Mathf.Abs((StartAt.x - EndAt.x)) / BlockSize.x);
         zLimit = Mathf.RoundToInt(Mathf.Abs((StartAt.y - EndAt.y)) / BlockSize.y);
         tanks = new List<Tank_MB>(xLimit * zLimit);
@@ -141,7 +125,6 @@ public class SpawnField_MB : MonoBehaviour
 
 
 
-    // Update is called once per frame
     private void Start()
     {
         weightSum = CalcWeightSum();

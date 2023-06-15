@@ -19,15 +19,9 @@ public class Bullet_MB : MonoBehaviour
     public bool Stopped => !gameObject.activeSelf;
 
     private float damage;
-    //private bool colliding;
     private Weapon_MB weapon;
 
     
-
-    private void Start()
-    {
-        //angle = Vector3.Angle(Vector3.right, transform.eulerAngles);
-    }
 
     private void Update()
     {

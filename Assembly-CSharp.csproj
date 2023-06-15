@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{5B91A10D-F2ED-718C-2E82-0678FDD58C2C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -70,17 +71,13 @@
     <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.10\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.JobEntityGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\AnalyticsModels\TankSpawnFieldModel.cs" />
     <Compile Include="Assets\OOD Scripts\SpawnField_MB.cs" />
     <Compile Include="Assets\OOD Scripts\Tank_MB.cs" />
-    <Compile Include="Assets\DOTS Scripts\Authoring\SelectionTileMono.cs" />
     <Compile Include="Assets\Starfield Skybox\Demo\Script\LookCamera.cs" />
     <Compile Include="Assets\Common Scripts\Constants.cs" />
-    <Compile Include="Assets\DOTS Scripts\Authoring\CameraSingleton.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\TankPropertiesMono.cs" />
     <Compile Include="Assets\Common Scripts\Extensions.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankDefense.cs" />
-    <Compile Include="Assets\DOTS Scripts\Systems\SelectionSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankRandom.cs" />
     <Compile Include="Assets\Common Scripts\BalancedTankStats.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\BulletMono.cs" />
@@ -97,16 +94,12 @@
     <Compile Include="Assets\DOTS Scripts\Components\Tags.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\TankSpawnerMono.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\Layer.cs" />
-    <Compile Include="Assets\Common Scripts\AnaliticsUtils.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankAttack.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\RadarSystem.cs" />
     <Compile Include="Assets\Common Scripts\StringUtils.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\DefenseSystem.cs" />
-    <Compile Include="Assets\DOTS Scripts\Components\WorldSelection.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\ParentMono.cs" />
     <Compile Include="Assets\OOD Scripts\SpawnFieldManager.cs" />
-    <Compile Include="Assets\OOD Scripts\AnaliticsSetup.cs" />
-    <Compile Include="Assets\DOTS Scripts\Systems\InitializeTankSystem.cs" />
     <Compile Include="Assets\Common Scripts\Helpers.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankProperties.cs" />
     <Compile Include="Assets\Common Scripts\AimTarget.cs" />
@@ -120,14 +113,10 @@
     <Compile Include="Assets\OOD Scripts\Bullet_MB.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\ApplyDamageAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankSpawner.cs" />
-    <Compile Include="Assets\DOTS Scripts\Authoring\SelectionWorldMono.cs" />
-    <Compile Include="Assets\DOTS Scripts\Systems\TankMovementSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\IgnoreEntitiesCollector.cs" />
     <Compile Include="Assets\Common Scripts\HeavyTankStats.cs" />
     <Compile Include="Assets\OOD Scripts\Weapon_MB.cs" />
     <Compile Include="Assets\OOD Scripts\TankAttack_MB.cs" />
-    <Compile Include="Assets\DOTS Scripts\Systems\CameraControllerSystem.cs" />
-    <Compile Include="Assets\DOTS Scripts\Components\Aspects\TankModelAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\DistanceComparer.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TankAspect.cs" />
   </ItemGroup>

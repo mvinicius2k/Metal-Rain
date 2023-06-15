@@ -17,17 +17,6 @@ public struct IgnoreEntitiesCollector : ICollector<RaycastHit>
 
     public int NumHits { get; private set; }
     
-
-    //public IgnoreEntitiesCollector(in NativeArray<Entity> ignore, float3 origin)
-    //{
-    //    Ignore = ignore;
-    //    Origin = origin;
-    //    ClosestHit = default;
-    //    MaxFraction = 1f;
-    //    NumHits = 0;
-    //    hitted = false;
-    //}
-
     public IgnoreEntitiesCollector(Entity ignore)
     {
         Ignore = new NativeArray<Entity>(1, Allocator.Temp);

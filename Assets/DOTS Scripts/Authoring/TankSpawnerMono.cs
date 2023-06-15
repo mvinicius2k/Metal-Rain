@@ -13,7 +13,6 @@ public class TankSpawnerMono : MonoBehaviour
 {
     
     public Vector2 BlockSize, Start, End;
-    //public GameObject ChosenTank;
     public SpawnRate[] SpawnRate;
     public float Orientation;
     public Team Team;
@@ -52,7 +51,6 @@ public class TankSpawnerMonoBaker : Baker<TankSpawnerMono>
             BlockSize = authoring.BlockSize,
             Start = authoring.Start,
             End = authoring.End,
-            //ChosenTank = GetEntity(authoring.ChosenTank, TransformUsageFlags.Dynamic),
             Team = authoring.Team,
             Orientation = authoring.Orientation * math.PI/180f
         }) ;

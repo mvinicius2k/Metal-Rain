@@ -11,7 +11,6 @@ using UnityEngine.Events;
 public class Tank_MB : MonoBehaviour
 {
     public TankStatsBase Stats;
-    //public Aim_MB Aim;
     public TankAttack_MB Attack;
     public float CurrentLife;
     public GameObject Model;

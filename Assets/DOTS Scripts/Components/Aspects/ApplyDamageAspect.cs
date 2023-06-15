@@ -10,7 +10,7 @@ using Unity.Entities;
 public readonly partial struct ApplyDamageAspect : IAspect
 {
     public readonly Entity Entity;
-    public readonly RefRO<AliveTankTag> AliveTank;//para query
+    public readonly RefRO<AliveTankTag> AliveTank;
     public readonly RefRW<TankAttack> Attack;
     private readonly RefRO<TankProperties> properties;
     public float Timer { get => Attack.ValueRO.ShootTimer; set => Attack.ValueRW.ShootTimer = value; }

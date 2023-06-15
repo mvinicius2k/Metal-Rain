@@ -26,7 +26,6 @@ public partial struct BulletSystem : ISystem
 
     public void OnUpdate(ref SystemState state)
     {
-        //var bulletEcb = new EntityCommandBuffer(Allocator.TempJob);
         var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().PhysicsWorld;
         var physicsEcb = new EntityCommandBuffer(Allocator.TempJob);
         var bulletJob = new BulletJob
@@ -50,62 +49,61 @@ public partial struct BulletSystem : ISystem
 
 
     }
-}
 
-[BurstCompile]
-public partial struct BulletJob : IJobEntity
-{
-    public float Speed, DeltaTime;
-    [ReadOnly]
-    public PhysicsWorld Physics;
-    [ReadOnly]
-    public ComponentLookup<Parent> ParentLookup;
-    [ReadOnly]
-    public ComponentLookup<LocalToWorld> GlobalTransformLookup;
-    [ReadOnly]
-    public ComponentLookup<TankDefense> DefenseLookup;
-    public EntityCommandBuffer.ParallelWriter Ecb;
 
-    public void Execute(BulletAspect bulletAspect, [ChunkIndexInQuery] int sortkey)
+    [BurstCompile]
+    public partial struct BulletJob : IJobEntity
     {
-        var globalTransform = GlobalTransformLookup.GetRefRO(bulletAspect.Entity);
-        var hits = new NativeList<DistanceHit>(Allocator.Temp);
-        
-        var center = GlobalTransformLookup.GetRefRO(bulletAspect.Bullet.ValueRO.Center).ValueRO.Position;
-        var bulletRotation = globalTransform.ValueRO.Rotation;
+        public float Speed, DeltaTime;
+        [ReadOnly]
+        public PhysicsWorld Physics;
+        [ReadOnly]
+        public ComponentLookup<Parent> ParentLookup;
+        [ReadOnly]
+        public ComponentLookup<LocalToWorld> GlobalTransformLookup;
+        [ReadOnly]
+        public ComponentLookup<TankDefense> DefenseLookup;
+        public EntityCommandBuffer.ParallelWriter Ecb;
 
-        var sucess = Physics.OverlapBox(center, bulletRotation, bulletAspect.ColliderSize, ref hits, bulletAspect.Bullet.ValueRO.Layer);
-
-        if (sucess)
+        public void Execute(BulletAspect bulletAspect, [ChunkIndexInQuery] int sortkey)
         {
-            for (int i = 0; i < hits.Length; i++)
+            var globalTransform = GlobalTransformLookup.GetRefRO(bulletAspect.Entity);
+            var hits = new NativeList<DistanceHit>(Allocator.Temp);
+        
+            var center = GlobalTransformLookup.GetRefRO(bulletAspect.Bullet.ValueRO.Center).ValueRO.Position;
+            var bulletRotation = globalTransform.ValueRO.Rotation;
+
+            var sucess = Physics.OverlapBox(center, bulletRotation, bulletAspect.ColliderSize, ref hits, bulletAspect.Bullet.ValueRO.Layer);
+
+            if (sucess)
             {
-                if (ParentLookup.TryGetComponent(hits[i].Entity, out var parent)
-                    && DefenseLookup.HasComponent(parent.Value))
+                for (int i = 0; i < hits.Length; i++)
                 {
-                    Ecb.AppendToBuffer(sortkey, parent.Value, new Damage
+                    if (ParentLookup.TryGetComponent(hits[i].Entity, out var parent)
+                        && DefenseLookup.HasComponent(parent.Value))
                     {
-                        Value = bulletAspect.Bullet.ValueRO.Damage
-                    });
-                    //Debug.Log($"Bala {bulletAspect.Entity} atingiu {parent}");
-                    Ecb.DestroyEntity(sortkey, bulletAspect.Entity);
+                        Ecb.AppendToBuffer(sortkey, parent.Value, new Damage
+                        {
+                            Value = bulletAspect.Bullet.ValueRO.Damage
+                        });
+                        //Debug.Log($"Bala {bulletAspect.Entity} atingiu {parent}");
+                        Ecb.DestroyEntity(sortkey, bulletAspect.Entity);
+                    }
                 }
             }
+            else
+            {
+                var translationValue = Speed * DeltaTime * math.normalize(globalTransform.ValueRO.Forward);
+                bulletAspect.LocalTransform.ValueRW.Position += translationValue;
+                bulletAspect.Countdown.ValueRW.Value -= DeltaTime;
+
+                if(bulletAspect.Countdown.ValueRO.Value <= 0f)
+                    Ecb.DestroyEntity(sortkey, bulletAspect.Entity);
+            }
+
+
+
+
         }
-        else
-        {
-            var translationValue = Speed * DeltaTime * math.normalize(globalTransform.ValueRO.Forward);
-            bulletAspect.LocalTransform.ValueRW.Position += translationValue;
-            //var newPosition = bulletAspect.LocalTransform.ValueRO.Translate(translationValue).Position;
-            //bulletAspect.LocalTransform.ValueRW.Position = newPosition;
-            bulletAspect.Countdown.ValueRW.Value -= DeltaTime;
-
-            if(bulletAspect.Countdown.ValueRO.Value <= 0f)
-                Ecb.DestroyEntity(sortkey, bulletAspect.Entity);
-        }
-
-
-
-
     }
 }
