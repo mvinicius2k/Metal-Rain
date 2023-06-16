@@ -1,19 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using TMPro;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Jobs;
 using Unity.Mathematics;
-using Unity.Services.Analytics;
 using Unity.Transforms;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 [BurstCompile, UpdateInGroup(typeof(InitializationSystemGroup))]
 public partial struct TankSpawnerSystem : ISystem
@@ -96,7 +86,7 @@ public partial struct TankSpawnerPointsJob : IJobEntity
             }
         }
 
-        RandomizeList:
+    RandomizeList:
         spawn.Random.ValueRW.Value.Shuffle(ref list);
 
         flatIdx = 0;

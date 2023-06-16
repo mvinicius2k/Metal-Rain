@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.Entities;
-using Unity.Mathematics;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public struct Distance<T> where T : MonoBehaviour

@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.Collections;
-using Unity.Entities.UniversalDelegates;
-using Unity.Mathematics;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class TankAttack_MB : MonoBehaviour
@@ -132,7 +124,7 @@ public class TankAttack_MB : MonoBehaviour
             if (enemiesToChoose.Count == enemiesToChoose.Capacity - 1)
                 break;
         }
-       
+
 
         if (enemiesToChoose.Count > 0)
         {
@@ -142,7 +134,7 @@ public class TankAttack_MB : MonoBehaviour
         else
             return null;
 
-    
+
 
     }
 

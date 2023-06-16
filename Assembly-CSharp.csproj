@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{5B91A10D-F2ED-718C-2E82-0678FDD58C2C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -115,6 +114,7 @@
     <Compile Include="Assets\DOTS Scripts\Components\TankSpawner.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\IgnoreEntitiesCollector.cs" />
     <Compile Include="Assets\Common Scripts\HeavyTankStats.cs" />
+    <Compile Include="Assets\Common Scripts\StartParams.cs" />
     <Compile Include="Assets\OOD Scripts\Weapon_MB.cs" />
     <Compile Include="Assets\OOD Scripts\TankAttack_MB.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\DistanceComparer.cs" />

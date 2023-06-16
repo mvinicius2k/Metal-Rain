@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.Entities;
+﻿using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Transforms;
 using UnityEngine;
 
 public class TankPropertiesMono : MonoBehaviour
@@ -63,7 +56,7 @@ public class TankStatsBlobAssetBaker : Baker<TankPropertiesMono>
         AddComponent<StandbyTankTag>(entity);
         AddComponent<AliveTankTag>(entity);
         AddBuffer<Damage>(entity);
-        
+
     }
 }
 

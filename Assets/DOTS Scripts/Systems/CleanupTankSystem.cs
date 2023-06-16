@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Entities;
-using UnityEngine;
 
 [UpdateInGroup(typeof(InitializationSystemGroup))]
 public partial struct CleanupTankSystem : ISystem
@@ -36,7 +32,7 @@ public partial struct CleanupTankSystem : ISystem
                 //Debug.Log($"{entity} não mirará mais em {attack.Target}");
                 ecb.SetComponentEnabled<StandbyTankTag>(entity, true);
                 ecb.SetComponentEnabled<TankAttack>(entity, false);
-            } 
+            }
             else
             {
                 //Debug.Log($"{entity}, cujo alvo é o {attack.Target} está ok");
@@ -46,7 +42,7 @@ public partial struct CleanupTankSystem : ISystem
         foreach (var (tag, entity) in SystemAPI.Query<AliveTankTag>().WithEntityAccess())
         {
             //if (buffLook.HasBuffer(entity))
-                //Debug.Log($"{entity} não tem ataque");
+            //Debug.Log($"{entity} não tem ataque");
         }
 
         //Por fim, manda os tanks mortos pro limbo
@@ -62,3 +58,4 @@ public partial struct CleanupTankSystem : ISystem
 
     }
 }
+//

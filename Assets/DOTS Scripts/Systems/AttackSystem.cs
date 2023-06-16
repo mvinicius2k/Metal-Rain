@@ -1,10 +1,8 @@
-﻿using System.Linq;
-using Unity.Burst;
+﻿using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 [BurstCompile]
 [UpdateAfter(typeof(RadarSystem)), UpdateInGroup(typeof(VariableRateSimulationSystemGroup))]

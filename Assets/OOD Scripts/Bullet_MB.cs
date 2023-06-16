@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.Entities;
-using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine;
 
 public class Bullet_MB : MonoBehaviour
 {
@@ -21,7 +13,7 @@ public class Bullet_MB : MonoBehaviour
     private float damage;
     private Weapon_MB weapon;
 
-    
+
 
     private void Update()
     {
@@ -36,7 +28,7 @@ public class Bullet_MB : MonoBehaviour
         if (Stopped)
             return;
 
-        if(MaxDuration <= 0f)
+        if (MaxDuration <= 0f)
         {
             weapon.BulletPool.Release(gameObject);
             return;
@@ -64,7 +56,7 @@ public class Bullet_MB : MonoBehaviour
     {
         Gizmos.color = CustomColors.alphaRed;
         var bak = Gizmos.matrix;
-        Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.localRotation, Vector3.one) ;
+        Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.localRotation, Vector3.one);
         Gizmos.DrawCube(transform.position + ColliderOffset, ColliderSize);
         Gizmos.matrix = bak;
     }

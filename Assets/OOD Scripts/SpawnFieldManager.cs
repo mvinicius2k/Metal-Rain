@@ -1,14 +1,4 @@
-﻿using Mono.Cecil.Cil;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.Collections;
-using Unity.Jobs;
-using Unity.Mathematics;
-using Unity.Services.Analytics;
-using UnityEditor.VersionControl;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -67,6 +57,21 @@ public class SpawnFieldManager : MonoBehaviour
 
     }
 
+    private void Start()
+    {
+        if (!StartParams.Instance.IsValid)
+            return;
+
+        foreach (var spawn in StartParams.Instance.SpawnConfigs)
+        {
+            var spawnObj = Instantiate<GameObject>(new GameObject(), SpawnFields.transform);
+            spawnObj.name = $"{spawn.Team} spawner";
+            var field = spawnObj.AddComponent<SpawnField_MB>();
+            field.FromDto(spawn);
+            TanksProperties[field.Team].Spawns.Add(field);
+
+        }
+    }
 
     private void Update()
     {

@@ -2,9 +2,7 @@
 using System.Linq;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Physics;
-using static UnityEngine.UI.Image;
 using RaycastHit = Unity.Physics.RaycastHit;
 
 public struct IgnoreEntitiesCollector : ICollector<RaycastHit>
@@ -16,7 +14,7 @@ public struct IgnoreEntitiesCollector : ICollector<RaycastHit>
     public float MaxFraction { get; private set; }
 
     public int NumHits { get; private set; }
-    
+
     public IgnoreEntitiesCollector(Entity ignore)
     {
         Ignore = new NativeArray<Entity>(1, Allocator.Temp);

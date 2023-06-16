@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Pool;
 
 public class Weapon_MB : MonoBehaviour
@@ -14,7 +8,7 @@ public class Weapon_MB : MonoBehaviour
     public Transform FirePoint;
 
 
-    
+
 
 
     [Header("Criação do Pool")] //Executados somente uma vez durante a primeira instanciação da instância de pool
@@ -57,8 +51,8 @@ public class Weapon_MB : MonoBehaviour
 
     public bool TryFire()
     {
-        
-        if(fireDelayCount > 0f)
+
+        if (fireDelayCount > 0f)
             return false;
         //Debug.Log("Atirando");
         fireDelayCount = Data.ShootDelay;
@@ -78,7 +72,7 @@ public class Weapon_MB : MonoBehaviour
 
     private void Update()
     {
-        if(fireDelayCount > 0f && SpawnFieldManager.Instance.Started)
+        if (fireDelayCount > 0f && SpawnFieldManager.Instance.Started)
             fireDelayCount -= Time.deltaTime;
 
 

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Unity.Collections;
-using Unity.Entities;
+﻿using Unity.Entities;
 
 public readonly partial struct ApplyDamageAspect : IAspect
 {
@@ -17,7 +10,7 @@ public readonly partial struct ApplyDamageAspect : IAspect
     public Entity TargetEntity => Attack.ValueRO.Target;
     public TankProperties Properties => properties.ValueRO;
     public ref TankStatsData BaseProperties => ref properties.ValueRO.Blob.Value;
-    
+
 }
 
 

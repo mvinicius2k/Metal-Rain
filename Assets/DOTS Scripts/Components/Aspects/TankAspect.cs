@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.Entities;
+﻿using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEditor.VersionControl;
-using UnityEngine;
 
 public readonly partial struct TankAspect : IAspect
 {
@@ -43,18 +36,18 @@ public readonly partial struct TankAspect : IAspect
         var position = GetWorldPosition(in lookup);
         var res = target - position;
         var normalized = math.normalize(res.ToXZ());
-        var radians = math.atan2(normalized.x, normalized.y) - math.PI/2f;
+        var radians = math.atan2(normalized.x, normalized.y) - math.PI / 2f;
         return radians;
-        
+
     }
 
     public void SetAimTo(float3 target, in ComponentLookup<LocalToWorld> lookup)
     {
         //Debug.Log($"Setando mira para {target}");
         var yAngle = GetYRotation(target, in lookup);
-        
+
         LocalTransform.ValueRW.Rotation = quaternion.EulerXYZ(0f, yAngle, 0f);
-        
-        
+
+
     }
 }

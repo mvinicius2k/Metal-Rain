@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.Collections;
+﻿using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -13,7 +8,7 @@ public static class Helpers
     {
         LayerMask layerMask = default;
 
-        
+
 
         for (int i = 0; i < layers.Length; i++)
         {
@@ -21,6 +16,6 @@ public static class Helpers
             layerMask.value |= 1 << layerIndex;
         }
 
-        return (uint) layerMask.value;
+        return (uint)layerMask.value;
     }
 }

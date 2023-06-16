@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.Burst;
+﻿using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
 using Unity.Transforms;
-using UnityEngine;
 
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 [UpdateBefore(typeof(PhysicsSimulationGroup))]
@@ -69,7 +63,7 @@ public partial struct BulletSystem : ISystem
         {
             var globalTransform = GlobalTransformLookup.GetRefRO(bulletAspect.Entity);
             var hits = new NativeList<DistanceHit>(Allocator.Temp);
-        
+
             var center = GlobalTransformLookup.GetRefRO(bulletAspect.Bullet.ValueRO.Center).ValueRO.Position;
             var bulletRotation = globalTransform.ValueRO.Rotation;
 
@@ -97,7 +91,7 @@ public partial struct BulletSystem : ISystem
                 bulletAspect.LocalTransform.ValueRW.Position += translationValue;
                 bulletAspect.Countdown.ValueRW.Value -= DeltaTime;
 
-                if(bulletAspect.Countdown.ValueRO.Value <= 0f)
+                if (bulletAspect.Countdown.ValueRO.Value <= 0f)
                     Ecb.DestroyEntity(sortkey, bulletAspect.Entity);
             }
 

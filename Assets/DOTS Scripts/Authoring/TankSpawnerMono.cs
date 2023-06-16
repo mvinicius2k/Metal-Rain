@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.Entities;
+﻿using Unity.Entities;
 using Unity.Mathematics;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class TankSpawnerMono : MonoBehaviour
 {
-    
+
     public Vector2 BlockSize, Start, End;
     public SpawnRate[] SpawnRate;
     public float Orientation;
     public Team Team;
     public int RandomSeed = 50;
+
 
     private void OnDrawGizmos()
     {
@@ -34,7 +28,7 @@ public class TankSpawnerMono : MonoBehaviour
             y = transform.position.y,
             z = Mathf.Abs(Start.y - End.y)
         };
-        
+
         //
         Gizmos.DrawCube(center, size);
     }
@@ -52,13 +46,13 @@ public class TankSpawnerMonoBaker : Baker<TankSpawnerMono>
             Start = authoring.Start,
             End = authoring.End,
             Team = authoring.Team,
-            Orientation = authoring.Orientation * math.PI/180f
-        }) ;
+            Orientation = authoring.Orientation * math.PI / 180f
+        });
 
         AddComponent<RandomGenerator>(entity, new RandomGenerator
         {
             Value = new Unity.Mathematics.Random((uint)authoring.RandomSeed)
-        }) ;
+        });
 
         AddBuffer<TankSpawnerRateBuffer>(entity);
 
@@ -67,12 +61,12 @@ public class TankSpawnerMonoBaker : Baker<TankSpawnerMono>
             AppendToBuffer(entity, new TankSpawnerRateBuffer
             {
                 Kind = authoring.SpawnRate[i].Kind,
-                Prefab = GetEntity(authoring.SpawnRate[i].TankPrefab, TransformUsageFlags.Dynamic),
+                Prefab = GetEntity(authoring.SpawnRate[i].Prefab, TransformUsageFlags.Dynamic),
                 Weight = authoring.SpawnRate[i].Weight,
-            }) ;
+            });
         }
 
-        
+
 
     }
 }

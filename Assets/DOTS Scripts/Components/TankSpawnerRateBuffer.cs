@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.Entities;
+﻿using Unity.Entities;
 using Unity.Mathematics;
 
 public struct TankSpawnerRateBuffer : IBufferElementData
@@ -16,8 +11,8 @@ public struct TankSpawnerRateBuffer : IBufferElementData
     {
         var rate = Weight / totalWeight;
         var result = math.ceil(size * rate);
-        return (int) result;
+        return (int)result;
     }
-   
+
 }
 

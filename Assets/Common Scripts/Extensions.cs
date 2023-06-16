@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Mathematics;
-using Unity.Physics;
 using UnityEngine;
 
 public static class Extensions

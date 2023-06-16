@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.Entities;
+﻿using Unity.Entities;
 using UnityEngine;
 
 public class BulletMono : MonoBehaviour
@@ -23,8 +18,8 @@ public class BulletMono : MonoBehaviour
         Gizmos.matrix = Matrix4x4.TRS(Center.transform.position, transform.localRotation, Vector3.one);
         Gizmos.DrawCube(Vector3.zero, ColliderSize);
         Gizmos.matrix = bak;
-        
-        
+
+
     }
 }
 
@@ -41,8 +36,8 @@ public class BulletMonoBaker : Baker<BulletMono>
             Center = GetEntity(authoring.Center.gameObject, TransformUsageFlags.Dynamic),
             Layer = new Unity.Physics.CollisionFilter
             {
-                BelongsTo = (uint) Layer.Tank,
-                CollidesWith = (uint) Layer.Tank,
+                BelongsTo = (uint)Layer.Tank,
+                CollidesWith = (uint)Layer.Tank,
             }
         }); ;
 
