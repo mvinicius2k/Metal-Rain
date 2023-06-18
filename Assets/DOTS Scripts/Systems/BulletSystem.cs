@@ -7,12 +7,18 @@ using Unity.Physics.Systems;
 using Unity.Transforms;
 
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
-[UpdateBefore(typeof(PhysicsSimulationGroup))]
+//[UpdateBefore(typeof(PhysicsSimulationGroup))]
 public partial struct BulletSystem : ISystem
 {
+    private ComponentLookup<TankDefense> defenseLookup;
+    private ComponentLookup<LocalToWorld> globalTransformLookup;
+    private ComponentLookup<Parent> parentLookup;
+
     public void OnCreate(ref SystemState state)
     {
-
+        defenseLookup = state.GetComponentLookup<TankDefense>();
+        globalTransformLookup = state.GetComponentLookup<LocalToWorld>();
+        parentLookup = state.GetComponentLookup<Parent>();  
         state.RequireForUpdate<Bullet>();
 
 
@@ -20,15 +26,19 @@ public partial struct BulletSystem : ISystem
 
     public void OnUpdate(ref SystemState state)
     {
+        defenseLookup.Update(ref state);
+        globalTransformLookup.Update(ref state);
+        parentLookup.Update(ref state);
+
         var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().PhysicsWorld;
         var physicsEcb = new EntityCommandBuffer(Allocator.TempJob);
         var bulletJob = new BulletJob
         {
             DeltaTime = SystemAPI.Time.DeltaTime,
             Speed = 15f,
-            DefenseLookup = state.GetComponentLookup<TankDefense>(),
-            GlobalTransformLookup = state.GetComponentLookup<LocalToWorld>(),
-            ParentLookup = state.GetComponentLookup<Parent>(),
+            DefenseLookup = defenseLookup,
+            GlobalTransformLookup = globalTransformLookup,
+            ParentLookup = parentLookup,
             Physics = physicsWorld,
             Ecb = physicsEcb.AsParallelWriter(),
 

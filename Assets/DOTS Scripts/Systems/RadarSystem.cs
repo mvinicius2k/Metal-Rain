@@ -27,10 +27,19 @@ public partial struct RadarSystem : ISystem
     private bool endgame;
     private EntityQuery redTanks;
     private EntityQuery greenTanks;
+    private EntityQuery allTanks;
+    private TankAspect.TypeHandle tankAspectHandle;
+    private ComponentLookup<LocalToWorld> globalTransformLookup;
 
+    private const uint TankLayer = (uint)Layer.Tank;
     [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
+        tankAspectHandle = new TankAspect.TypeHandle(ref state);
+        globalTransformLookup = state.GetComponentLookup<LocalToWorld>();
+        greenTanks = new EntityQueryBuilder(Allocator.TempJob).WithAspect<TankAspect>().WithAll<GreenTeamTag>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState).Build(ref state)   ;
+        redTanks = new EntityQueryBuilder(Allocator.TempJob).WithAspect<TankAspect>().WithAll<RedTeamTag>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState).Build(ref state);
+        allTanks = new EntityQueryBuilder(Allocator.TempJob).WithAspect<TankAspect>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState).Build(ref state);
         state.RequireForUpdate<TankProperties>();
     }
     [BurstCompile]
@@ -38,6 +47,10 @@ public partial struct RadarSystem : ISystem
     {
         if (endgame)
             return;
+
+        tankAspectHandle.Update(ref state);
+        globalTransformLookup.Update(ref state);
+
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -51,8 +64,7 @@ public partial struct RadarSystem : ISystem
 
         //Todos os tanks do time vermelho vivos
 
-        greenTanks = new EntityQueryBuilder(Allocator.TempJob).WithAspect<TankAspect>().WithAll<GreenTeamTag>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState).Build(ref state);
-        redTanks = new EntityQueryBuilder(Allocator.TempJob).WithAspect<TankAspect>().WithAll<RedTeamTag>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState).Build(ref state);
+        
 
         //Se não houver nenhum tanque em algum dos lados, gameover
         if (redTanks.IsEmpty || greenTanks.IsEmpty)
@@ -70,7 +82,7 @@ public partial struct RadarSystem : ISystem
         var greenColliders = new NativeArray<Entity>(greenTanksCount, Allocator.TempJob);
         var redColliders = new NativeArray<Entity>(redTanksCount, Allocator.TempJob);
 
-        var allTanks = SystemAPI.QueryBuilder().WithAspect<TankAspect>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState).Build();
+        //allTanks = SystemAPI.QueryBuilder()
 
         int greenIdx = 0, redIdx = 0;
         foreach (var tank in SystemAPI.Query<TankAspect>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
@@ -83,6 +95,7 @@ public partial struct RadarSystem : ISystem
         }
 
         var ecb = new EntityCommandBuffer(Allocator.TempJob);
+        
         new TankRadarJob
         {
             GreenTargets = new TargetProperties
@@ -101,11 +114,11 @@ public partial struct RadarSystem : ISystem
             },
             Ecb = ecb.AsParallelWriter(),
             Random = new Unity.Mathematics.Random(50),
-            TankAspectTypeHandle = new TankAspect.TypeHandle(ref state),
-            EnemyLayer = (uint)Layer.Tank,
+            TankAspectTypeHandle = tankAspectHandle,
+            EnemyLayer = TankLayer,
             Physics = physicsWorld,
             DeltaTime = SystemAPI.Time.DeltaTime,
-            GlobalTransformLookup = state.GetComponentLookup<LocalToWorld>(),
+            GlobalTransformLookup = globalTransformLookup,
         }.ScheduleParallel(allTanks, state.Dependency).Complete();
 
         state.Dependency.Complete();

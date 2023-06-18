@@ -14,7 +14,7 @@ public partial struct CleanupTankSystem : ISystem
 
     public void OnUpdate(ref SystemState state)
     {
-        var buffLook = state.GetBufferLookup<Damage>();
+        //var buffLook = state.GetBufferLookup<Damage>();
         var deadTanks = SystemAPI.QueryBuilder().WithAll<TankCleanup>().Build().ToEntityArray(Allocator.Temp);
         //Debug.Log("------------------------------");
         for (int i = 0; i < deadTanks.Length; i++)
@@ -39,12 +39,7 @@ public partial struct CleanupTankSystem : ISystem
             }
         }
 
-        foreach (var (tag, entity) in SystemAPI.Query<AliveTankTag>().WithEntityAccess())
-        {
-            //if (buffLook.HasBuffer(entity))
-            //Debug.Log($"{entity} não tem ataque");
-        }
-
+       
         //Por fim, manda os tanks mortos pro limbo
         for (int i = deadTanks.Length - 1; i >= 0; i--)
         {

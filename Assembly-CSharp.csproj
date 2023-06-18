@@ -70,6 +70,7 @@
     <Analyzer Include="D:\Code\Metal Rain\Library\PackageCache\com.unity.entities@1.0.10\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.JobEntityGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\DOTS Scripts\Systems\StartupSystem.cs" />
     <Compile Include="Assets\OOD Scripts\SpawnField_MB.cs" />
     <Compile Include="Assets\OOD Scripts\Tank_MB.cs" />
     <Compile Include="Assets\Starfield Skybox\Demo\Script\LookCamera.cs" />
@@ -90,7 +91,9 @@
     <Compile Include="Assets\DOTS Scripts\Systems\AttackSystem.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankSpawnerRateBuffer.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TankSpawnerAspect.cs" />
+    <Compile Include="Assets\DOTS Scripts\Components\StartupPrefabs.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Tags.cs" />
+    <Compile Include="Assets\DOTS Scripts\Authoring\PrefabsMono.cs" />
     <Compile Include="Assets\DOTS Scripts\Authoring\TankSpawnerMono.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\Layer.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankAttack.cs" />
@@ -110,6 +113,7 @@
     <Compile Include="Assets\DOTS Scripts\Components\RandomGenerator.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\TargetAspect.cs" />
     <Compile Include="Assets\OOD Scripts\Bullet_MB.cs" />
+    <Compile Include="Assets\DOTS Scripts\Components\Aspects\SpawnSpawnFieldsAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\Aspects\ApplyDamageAspect.cs" />
     <Compile Include="Assets\DOTS Scripts\Components\TankSpawner.cs" />
     <Compile Include="Assets\DOTS Scripts\Systems\IgnoreEntitiesCollector.cs" />

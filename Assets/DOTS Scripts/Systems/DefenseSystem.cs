@@ -1,7 +1,7 @@
 ﻿using Unity.Burst;
 using Unity.Entities;
 
-[UpdateInGroup(typeof(LateSimulationSystemGroup)), UpdateAfter(typeof(AttackSystem))]
+[UpdateInGroup(typeof(LateSimulationSystemGroup))]
 public partial struct DefenseSystem : ISystem
 {
     public void OnCreate(ref SystemState state)

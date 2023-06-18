@@ -5,17 +5,24 @@ using Unity.Mathematics;
 using Unity.Transforms;
 
 [BurstCompile]
-[UpdateAfter(typeof(RadarSystem)), UpdateInGroup(typeof(VariableRateSimulationSystemGroup))]
+[UpdateInGroup(typeof(VariableRateSimulationSystemGroup))]
 public partial struct AttackSystem : ISystem
 {
+    private ComponentLookup<LocalToWorld> globalTransformLookup;
+    private ComponentLookup<TankProperties> tankPropertiesLookup;
 
     public void OnCreate(ref SystemState state)
     {
+        tankPropertiesLookup = state.GetComponentLookup<TankProperties>();
+        globalTransformLookup = state.GetComponentLookup<LocalToWorld>();
         state.RequireForUpdate<TankAttack>();
     }
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
+        tankPropertiesLookup.Update(ref state);
+        globalTransformLookup.Update(ref state);
+
         var ecb = new EntityCommandBuffer(Allocator.TempJob);
 
         var arr = new NativeList<(TankProperties, Entity)>(Allocator.Temp);
@@ -28,8 +35,8 @@ public partial struct AttackSystem : ISystem
         {
             Ecb = ecb,
             DeltaTime = SystemAPI.Time.DeltaTime,
-            TransformLookup = state.GetComponentLookup<LocalToWorld>(),
-            TankPropertiesLookup = state.GetComponentLookup<TankProperties>()
+            TransformLookup = globalTransformLookup,
+            TankPropertiesLookup = tankPropertiesLookup
 
 
         }.Schedule(state.Dependency);
