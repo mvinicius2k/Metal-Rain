@@ -9,6 +9,7 @@ using UnityEngine;
 public class PrefabsMono : MonoBehaviour
 {
     public TankKind_Prefab[] TankKind_Prefab;
+    public GameObject SpawnFieldPrefab;
 }
 
 public class PrefabsMonoBaker : Baker<PrefabsMono>
@@ -17,7 +18,10 @@ public class PrefabsMonoBaker : Baker<PrefabsMono>
     {
         var entity = GetEntity(authoring,TransformUsageFlags.WorldSpace);
         AddBuffer<StartupPrefabs>(entity);
-
+        AddComponent(entity, new StartSpawn
+        {
+            Prefab = GetEntity(authoring.SpawnFieldPrefab, TransformUsageFlags.WorldSpace)
+        });
         for (int i = 0; i < authoring.TankKind_Prefab.Length; i++)
         {
             AppendToBuffer(entity, new StartupPrefabs
