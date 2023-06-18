@@ -41,12 +41,11 @@ public partial struct StartupSystem : ISystem
             return;
 
 
-        SpawnSpawnFieldsAspect aspect;
-        foreach (var item in SystemAPI.Query<SpawnSpawnFieldsAspect>())
-        {
-            aspect = item;
-        }
-        
+        var aspectLookup = new SpawnSpawnFieldsAspect.Lookup(ref state);
+        var singleonEntity = SystemAPI.GetSingletonEntity<StartSpawn>();
+        var aspect = aspectLookup[singleonEntity];
+
+
         var ecb = new EntityCommandBuffer(Allocator.Temp);
         Debug.Log("Criando spwnds");
         var spawnPrefab = aspect.StartSpawn.ValueRO.Prefab;
