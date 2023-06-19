@@ -24,6 +24,12 @@ public class Bullet_MB : MonoBehaviour
         transform.Translate(Speed * Time.deltaTime * transform.up, Space.World);
     }
 
+    private void Start()
+    {
+        if (StartParams.Instance != null)
+            Speed = StartParams.Instance.StartModel.BulletSpeed;
+    }
+
     private void FixedUpdate()
     {
         if (Stopped)

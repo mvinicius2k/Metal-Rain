@@ -7,6 +7,7 @@ using UnityEngine;
 public class StartModel
 {
     public SpawnConfigModel[] SpawnConfig;
+    public float BulletSpeed;
 }
 
 [Serializable]

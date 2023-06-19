@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Light Tank Stats
   m_EditorClassIdentifier: 
   MaxLife: 100
-  Damage: 10
+  Damage: 5
   Cadence: 2
   Name: Tanque Leve
-  RadarAcuraccy: 3
+  RadarAcuraccy: 4
   RadarDelay: 1
   BulletPrefab: {fileID: 7225452204564850693, guid: c5ebc32c3e7d2de42bb60343e6bfb887,
     type: 3}
