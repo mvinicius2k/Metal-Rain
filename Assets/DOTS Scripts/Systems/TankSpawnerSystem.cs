@@ -12,6 +12,10 @@ using UnityEngine;
 [BurstCompile, UpdateInGroup(typeof(InitializationSystemGroup))]
 public partial struct TankSpawnerSystem : ISystem
 {
+    //Usado para os tanque não atirarem todos ao mesmo tempo
+    public const float RadarRandomCeil = 2f;
+
+    [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<TankSpawner>();
@@ -138,6 +142,15 @@ public partial struct TankSpawnerPointsJob : IJobEntity
 
                 });
 
+                //Necessário para todos os tanque não atirem ao mesmo tempo nos testes. Possivelmente dispensável no jogo real
+#if MAINTHREAD
+                SingleEcb.SetComponent(newTank, new TankAttack
+#else
+                Ecb.SetComponent(sortkey, newTank, new TankAttack
+#endif
+                {
+                    RadarTimer = spawn.Random.ValueRW.Value.NextFloat(0f, TankSpawnerSystem.RadarRandomCeil)
+                }) ;
 
                 if (spawn.Spawner.ValueRO.Team == Team.Green)
                 {

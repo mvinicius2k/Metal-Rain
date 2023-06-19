@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TankSpawnerMono : MonoBehaviour
 {
+    
+
     [Tooltip("Espaço que cada tanque ocupa")]
     public Vector2 BlockSize;
     public Vector2 Start; 

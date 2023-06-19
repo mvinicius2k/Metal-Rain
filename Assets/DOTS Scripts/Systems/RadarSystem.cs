@@ -47,7 +47,6 @@ public partial struct RadarSystem : ISystem
     {
         if (endgame)
             return;
-
         tankAspectHandle.Update(ref state);
         globalTransformLookup.Update(ref state);
 
@@ -65,7 +64,7 @@ public partial struct RadarSystem : ISystem
         if (redTanks.IsEmpty || greenTanks.IsEmpty)
         {
             endgame = true;
-            var winner = redTanks.IsEmpty ? "verde" : "vermelho";
+            FixedString64Bytes winner = redTanks.IsEmpty ? $"verde" : $"vermelho";
             Debug.Log($"Fim de jogo. Time {winner} venceu!");
             return;
         }
@@ -90,6 +89,7 @@ public partial struct RadarSystem : ISystem
         }
 
         var ecb = new EntityCommandBuffer(Allocator.TempJob);
+
         var job = new TankRadarJob
         {
             GreenTargets = new TargetProperties
@@ -121,9 +121,9 @@ public partial struct RadarSystem : ISystem
 #if MAINTHREAD
         job.Run(allTanks);
 #elif SCHEDULE
-        job.Schedule(allTanks, state.Dependency).Complete();
+        state.Dependency = job.Schedule(allTanks, state.Dependency);
 #else
-        job.ScheduleParallel(allTanks, state.Dependency).Complete();
+        state.Dependency = job.ScheduleParallel(allTanks, state.Dependency);
 #endif
 
 #if !MAINTHREAD
