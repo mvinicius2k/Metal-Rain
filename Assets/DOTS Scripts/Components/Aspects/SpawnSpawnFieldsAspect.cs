@@ -8,6 +8,6 @@ using Unity.Entities;
 public readonly partial struct SpawnSpawnFieldsAspect : IAspect
 {
     public readonly Entity Entity;
-    public readonly RefRO<StartSpawn> StartSpawn;
-    public readonly DynamicBuffer<StartupPrefabs> StartupPrefabs;
+    public readonly RefRO<SpawnField> StartSpawn;
+    public readonly DynamicBuffer<TankPrefabs> StartupPrefabs;
 }

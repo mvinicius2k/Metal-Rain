@@ -2,9 +2,10 @@
 
 public class Bullet_MB : MonoBehaviour
 {
+
     public LayerMask CollidesWith;
     public Vector3 ColliderSize;
-    public float Speed = 5f;
+    public float Speed = 15f;
     public float MaxDuration = 10f;
     public Vector3 ColliderOffset;
 
@@ -43,7 +44,6 @@ public class Bullet_MB : MonoBehaviour
             if (entity != null)
             {
                 entity.DigestDamage(damage);
-                //Debug.Log($"Bala atingiu {entity}");
                 weapon.BulletPool.Release(gameObject);
             }
 

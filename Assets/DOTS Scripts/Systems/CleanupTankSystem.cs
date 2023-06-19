@@ -3,6 +3,9 @@ using System.Linq;
 using Unity.Collections;
 using Unity.Entities;
 
+/// <summary>
+/// Limpa tanques marcados como mortos 
+/// </summary>
 [UpdateInGroup(typeof(InitializationSystemGroup))]
 public partial struct CleanupTankSystem : ISystem
 {
@@ -14,38 +17,23 @@ public partial struct CleanupTankSystem : ISystem
 
     public void OnUpdate(ref SystemState state)
     {
-        //var buffLook = state.GetBufferLookup<Damage>();
         var deadTanks = SystemAPI.QueryBuilder().WithAll<TankCleanup>().Build().ToEntityArray(Allocator.Temp);
-        //Debug.Log("------------------------------");
-        for (int i = 0; i < deadTanks.Length; i++)
-        {
-            //Debug.Log($"{deadTanks[i]} está morto");
-        }
-        //var singleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
-        //var ecb = singleton.CreateCommandBuffer(state.WorldUnmanaged);
         var ecb = new EntityCommandBuffer(Allocator.Temp);
+
         //Libera todos os tanks que estão mirando no tank morto
         foreach (var (attack, entity) in SystemAPI.Query<TankAttack>().WithEntityAccess())
         {
             if (deadTanks.Contains(attack.Target))
             {
-                //Debug.Log($"{entity} não mirará mais em {attack.Target}");
                 ecb.SetComponentEnabled<StandbyTankTag>(entity, true);
                 ecb.SetComponentEnabled<TankAttack>(entity, false);
-            }
-            else
-            {
-                //Debug.Log($"{entity}, cujo alvo é o {attack.Target} está ok");
             }
         }
 
        
         //Por fim, manda os tanks mortos pro limbo
         for (int i = deadTanks.Length - 1; i >= 0; i--)
-        {
-            //Debug.Log("Limpando tanque " + deadTanks[i]);
             ecb.RemoveComponent<TankCleanup>(deadTanks[i]);
-        }
 
         state.Dependency.Complete();
         ecb.Playback(state.EntityManager);
@@ -53,4 +41,3 @@ public partial struct CleanupTankSystem : ISystem
 
     }
 }
-//

@@ -24,11 +24,15 @@ public readonly partial struct TankAspect : IAspect
     public bool IsFree => standbyTank.ValueRO;
     public Entity FirePoint => Properties.ValueRO.FirePoint;
 
+    
     public float3 GetWorldPosition(in ComponentLookup<LocalToWorld> lookup)
     {
         return lookup.GetRefRO(Properties.ValueRO.Center).ValueRO.Position;
     }
 
+    /// <summary>
+    /// Vira o tanque para um alvo
+    /// </summary>
     public float GetYRotation(float3 target, in ComponentLookup<LocalToWorld> lookup)
     {
         Properties.ValueRW.AimTo = target;

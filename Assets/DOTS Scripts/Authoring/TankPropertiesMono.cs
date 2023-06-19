@@ -6,7 +6,9 @@ public class TankPropertiesMono : MonoBehaviour
 {
     public TankStatsBase Stats;
     public GameObject Model;
+    [Tooltip("Lugar onde as balas saem")]
     public Transform FirePoint;
+    [Tooltip("Centro do tanque, o pivô geralmente está embaixo do tanque")]
     public Transform Center;
     public GameObject BulletPrefab;
 
@@ -47,10 +49,10 @@ public class TankStatsBlobAssetBaker : Baker<TankPropertiesMono>
         {
             CurrentLife = data.MaxLife,
         });
-        AddSharedComponent(entity, new TankRandom
-        {
-            Value = new Unity.Mathematics.Random(50)
-        });
+        //AddSharedComponent(entity, new TankRandom
+        //{
+        //    Value = new Unity.Mathematics.Random(50)
+        //});
         AddComponent(entity, new TankAttack());
         SetComponentEnabled<TankAttack>(entity, false);
         AddComponent<StandbyTankTag>(entity);

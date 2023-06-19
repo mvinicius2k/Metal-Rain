@@ -61,7 +61,7 @@ public class TankAttack_MB : MonoBehaviour
 
     private void Update()
     {
-        if (SpawnFieldManager.Instance.EndGame)
+        if (SpawnFieldManager_MB.Instance.EndGame)
             return;
 
         if (Input.GetButtonDown(Constants.InputStart))
@@ -105,7 +105,7 @@ public class TankAttack_MB : MonoBehaviour
 
     private Tank_MB FoundEnemy()
     {
-        var fields = SpawnFieldManager.Instance.TanksProperties[Tank.SpawnField.EnemyTeam].Spawns;
+        var fields = SpawnFieldManager_MB.Instance.TanksProperties[Tank.SpawnField.EnemyTeam].Spawns;
         var enemies = ClosestEnemies(fields);
         if (enemies.Count == 0)
             return null;

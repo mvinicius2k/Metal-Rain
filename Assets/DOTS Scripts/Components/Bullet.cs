@@ -10,8 +10,3 @@ public struct Bullet : IComponentData
     public CollisionFilter Layer;
     public Entity Center;
 }
-
-public struct Countdown : IComponentData
-{
-    public float Value;
-}

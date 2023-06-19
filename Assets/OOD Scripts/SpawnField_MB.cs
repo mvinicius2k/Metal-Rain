@@ -3,33 +3,6 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-[Serializable]
-public struct TankKind_Prefab
-{
-    public TankKind Kind;
-    public GameObject Prefab;
-}
-[Serializable]
-public struct SpawnRate
-{
-    public int Weight;
-    public TankKind Kind;
-    public GameObject Prefab;
-
-    public int GetTotalFrom(float size, float totalWeight)
-    {
-        var rate = Weight / totalWeight;
-        return (int)math.ceil(size * rate);
-    }
-}
-
-public enum TankKind
-{
-    Balanced = 0,
-    Hunter = 1,
-    Light = 2
-}
-
 
 
 public class SpawnField_MB : MonoBehaviour
@@ -67,7 +40,7 @@ public class SpawnField_MB : MonoBehaviour
 
 
 
-    public void FromDto(SpawnConfigDto config)
+    public void FromDto(SpawnConfigModel config)
     {
         transform.position = config.WorldPosition;
         BlockSize = config.BlockSize;
@@ -130,7 +103,7 @@ public class SpawnField_MB : MonoBehaviour
                 newTank.transform.eulerAngles = new Vector3(0f, Orientation, 0f);
                 var tankMb = newTank.GetComponent<Tank_MB>();
                 tankMb.Dependencies(this);
-                tankMb.OnDead.AddListener((tank) => SpawnFieldManager.Instance.TanksProperties[Team].DeadCount++);
+                tankMb.OnDead.AddListener((tank) => SpawnFieldManager_MB.Instance.TanksProperties[Team].DeadCount++);
                 tanks.Add(tankMb);
             }
         }

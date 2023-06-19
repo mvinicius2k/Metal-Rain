@@ -10,14 +10,3 @@ public struct TankProperties : IComponentData
     public Entity Center;
     public Entity BulletPrefab;
 }
-
-public struct TankStatsData
-{
-    public float MaxLife;
-    public float Damage;
-    public float Cadence;
-    public BlobString Name;
-    public int RadarAccuracy;
-    public float RadarDelay;
-    public float Delay => 1f / Cadence;
-}

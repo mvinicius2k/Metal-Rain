@@ -72,7 +72,7 @@ public class Weapon_MB : MonoBehaviour
 
     private void Update()
     {
-        if (fireDelayCount > 0f && SpawnFieldManager.Instance.Started)
+        if (fireDelayCount > 0f && SpawnFieldManager_MB.Instance.Started)
             fireDelayCount -= Time.deltaTime;
 
 

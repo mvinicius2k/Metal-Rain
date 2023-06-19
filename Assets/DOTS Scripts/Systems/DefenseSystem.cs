@@ -1,6 +1,9 @@
 ﻿using Unity.Burst;
 using Unity.Entities;
 
+/// <summary>
+/// Processa o dano recebido pelas balas e marca o tanque como morto quando a vida acaba
+/// </summary>
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]
 public partial struct DefenseSystem : ISystem
 {
@@ -12,14 +15,21 @@ public partial struct DefenseSystem : ISystem
     {
         var ecb = new EntityCommandBuffer(Unity.Collections.Allocator.TempJob);
 
-        new DigestDamageJob
+        var job = new DigestDamageJob
         {
-            Ecb = ecb,
+#if MAINTHREAD
+            SingleEcb = ecb,
+#else
+            Ecb = ecb.AsParallelWriter(),
+#endif
+        };
 
-        }.Run();
-
-
+#if MAINTHREAD
+        job.Run();
+#else
+        state.Dependency = job.Schedule(state.Dependency);
         state.Dependency.Complete();
+#endif
         ecb.Playback(state.EntityManager);
         ecb.Dispose();
     }
@@ -27,10 +37,16 @@ public partial struct DefenseSystem : ISystem
     [BurstCompile]
     public partial struct DigestDamageJob : IJobEntity
     {
-        public EntityCommandBuffer Ecb;
+#if MAINTHREAD
+        public EntityCommandBuffer SingleEcb;
+#else
+        public EntityCommandBuffer.ParallelWriter Ecb;
+#endif
+        //Itera sobre todas as defesas que tem dano a se processar
         [BurstCompile]
-        public void Execute(AttackedTankAspect attackedTank)
+        public void Execute(AttackedTankAspect attackedTank, [ChunkIndexInQuery] int sortkey)
         {
+            //Processando danos
             for (int i = 0; i < attackedTank.DamageBuffer.Length; i++)
             {
                 attackedTank.Life -= attackedTank.DamageBuffer[i].Value;
@@ -39,18 +55,19 @@ public partial struct DefenseSystem : ISystem
             //Se morrer
             if (attackedTank.Life <= 0)
             {
-
-                //Debug.Log($"Matando {attackedTank.Entity}");
-
-                //Seta tags para definir como morto e para limpar tank morto
-                Ecb.SetComponentEnabled<AliveTankTag>(attackedTank.Entity, false);
-                Ecb.AddComponent<TankCleanup>(attackedTank.Entity);
-                Ecb.DestroyEntity(attackedTank.Entity);
-                //Debug.Log($"Tank destruído {attackedTank.Entity}");
+#if MAINTHREAD
+                SingleEcb.SetComponentEnabled<AliveTankTag>( attackedTank.Entity, false);
+                SingleEcb.AddComponent<TankCleanup>( attackedTank.Entity);
+                SingleEcb.DestroyEntity( attackedTank.Entity);
+#else
+                Ecb.SetComponentEnabled<AliveTankTag>(sortkey, attackedTank.Entity, false);
+                Ecb.AddComponent<TankCleanup>(sortkey, attackedTank.Entity);
+                Ecb.DestroyEntity(sortkey, attackedTank.Entity);
+#endif
 
             }
 
-
+            //Limpando danos registrados
             attackedTank.DamageBuffer.Clear();
 
 

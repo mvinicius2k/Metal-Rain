@@ -7,6 +7,12 @@ public struct TankSpawnerRateBuffer : IBufferElementData
     public TankKind Kind;
     public int Weight;
 
+    /// <summary>
+    /// Obtém a parte do todo <paramref name="totalWeight"/>
+    /// </summary>
+    /// <param name="size"></param>
+    /// <param name="totalWeight"></param>
+    /// <returns></returns>
     public int GetTotalFrom(float size, float totalWeight)
     {
         var rate = Weight / totalWeight;

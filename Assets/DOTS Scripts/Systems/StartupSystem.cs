@@ -10,13 +10,16 @@ using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
+/// <summary>
+/// Usado para ler as configurações do .json do mundo mono para o mundo entities. Dispensável no jogo real.
+/// </summary>
 public partial struct StartupSystem : ISystem
 {
 
-    private EntityQuery prefabsQuery;
-    bool stated;
+    private SpawnSpawnFieldsAspect.Lookup aspectLookup;
 
-    private Entity GetPrefab(TankKind kind, in DynamicBuffer<StartupPrefabs> buffer)
+
+    private Entity GetPrefab(TankKind kind, in DynamicBuffer<TankPrefabs> buffer)
     {
         for (int i = 0; i < buffer.Length; i++)
         {
@@ -29,27 +32,24 @@ public partial struct StartupSystem : ISystem
 
     public void OnCreate(ref SystemState state)
     {
-        prefabsQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<StartupPrefabs>().Build(state.EntityManager);
-        state.RequireForUpdate<StartupPrefabs>();
+        aspectLookup = new SpawnSpawnFieldsAspect.Lookup(ref state);
+        state.RequireForUpdate<TankPrefabs>();
     }
 
 
 
     public void OnUpdate(ref SystemState state)
     {
-        if (stated)
-            return;
-
-
-        var aspectLookup = new SpawnSpawnFieldsAspect.Lookup(ref state);
-        var singleonEntity = SystemAPI.GetSingletonEntity<StartSpawn>();
+        
+        aspectLookup.Update(ref state);
+       
+        var singleonEntity = SystemAPI.GetSingletonEntity<SpawnField>();
         var aspect = aspectLookup[singleonEntity];
 
 
         var ecb = new EntityCommandBuffer(Allocator.Temp);
-        Debug.Log("Criando spwnds");
         var spawnPrefab = aspect.StartSpawn.ValueRO.Prefab;
-        foreach (var configs in StartParams.Instance.SpawnConfigs)
+        foreach (var configs in StartParams.Instance.StartModel.SpawnConfig)
         {
 
             var entity = ecb.Instantiate(spawnPrefab);
@@ -93,8 +93,8 @@ public partial struct StartupSystem : ISystem
         state.Dependency.Complete();
         ecb.Playback(state.EntityManager);
         ecb.Dispose();
-        stated = true;
-        
+
+        state.EntityManager.DestroyEntity(singleonEntity);
     }
 }
 

@@ -4,17 +4,23 @@ using Unity.Serialization.Json;
 using UnityEngine;
 
 [Serializable]
-public class SpawnConfigDto
+public class StartModel
+{
+    public SpawnConfigModel[] SpawnConfig;
+}
+
+[Serializable]
+public class SpawnConfigModel
 {
     public Vector3 WorldPosition;
     public Vector2 BlockSize, Start, End;
-    public SpawnRateDto[] SpawnRates;
+    public SpawnRateModel[] SpawnRates;
     public float Orientation;
     public Team Team;
     public int RandomSeed;
 }
 [Serializable]
-public class SpawnRateDto
+public class SpawnRateModel
 {
     public int Weight;
     public int Kind;
@@ -29,12 +35,12 @@ public class StartParams : MonoBehaviour
     private static StartParams instance;
     public static StartParams Instance => instance;
 
-    private SpawnConfigDto[] spawnConfigs;
+    private StartModel startModel;
     private string JsonLocation;
     private bool isValid;
 
     public bool IsValid => isValid;
-    public SpawnConfigDto[] SpawnConfigs => spawnConfigs;
+    public StartModel StartModel => startModel;
 
     public GameObject GetTankPrefab(TankKind kind)
     {
@@ -87,7 +93,7 @@ public class StartParams : MonoBehaviour
                 return;
             }
 
-            spawnConfigs = JsonSerialization.FromJson<SpawnConfigDto[]>(jsonText);
+            startModel = JsonSerialization.FromJson<StartModel>(jsonText);
             isValid = true;
         }
         catch (Exception e)

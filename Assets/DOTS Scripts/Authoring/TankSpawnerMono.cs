@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class TankSpawnerMono : MonoBehaviour
 {
-
-    public Vector2 BlockSize, Start, End;
+    [Tooltip("Espaço que cada tanque ocupa")]
+    public Vector2 BlockSize;
+    public Vector2 Start; 
+    public Vector2 End;
+    [Tooltip("Proporção que cada tipo de tanque deve spawnar")]
     public SpawnRate[] SpawnRate;
+    [Tooltip("Rotação em graus do tanque ao spawnar")]
     public float Orientation;
     public Team Team;
     public int RandomSeed = 50;

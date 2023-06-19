@@ -2,7 +2,7 @@
 using Unity.Mathematics;
 using UnityEngine;
 
-public static class Helpers
+public static class Utils
 {
     public static uint GetLayerMaskValue(in NativeArray<Layer> layers)
     {

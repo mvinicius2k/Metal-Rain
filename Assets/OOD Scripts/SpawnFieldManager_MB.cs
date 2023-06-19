@@ -1,22 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-
-public class TanksProperty
-{
-    public List<SpawnField_MB> Spawns;
-    public int DeadCount;
-    public int SpawnedCount;
-
-    public bool Empty => DeadCount >= SpawnedCount;
-
-    public TanksProperty()
-    {
-        Spawns = new List<SpawnField_MB>();
-    }
-}
-
-public class SpawnFieldManager : MonoBehaviour
+public class SpawnFieldManager_MB : MonoBehaviour
 {
 
 
@@ -27,8 +12,8 @@ public class SpawnFieldManager : MonoBehaviour
     public bool EndGame;
     public bool Started;
 
-    private static SpawnFieldManager instance;
-    public static SpawnFieldManager Instance => instance;
+    private static SpawnFieldManager_MB instance;
+    public static SpawnFieldManager_MB Instance => instance;
 
 
 
@@ -62,10 +47,10 @@ public class SpawnFieldManager : MonoBehaviour
         if (!StartParams.Instance.IsValid)
             return;
 
-        foreach (var spawn in StartParams.Instance.SpawnConfigs)
+        foreach (var spawn in StartParams.Instance.StartModel.SpawnConfig)
         {
             var spawnObj = Instantiate<GameObject>(new GameObject(), SpawnFields.transform);
-            spawnObj.name = $"{spawn.Team} spawner";
+            //spawnObj.name = $"{spawn.Team} spawner";
             var field = spawnObj.AddComponent<SpawnField_MB>();
             field.FromDto(spawn);
             TanksProperties[field.Team].Spawns.Add(field);

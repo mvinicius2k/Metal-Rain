@@ -4,6 +4,9 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
+/// <summary>
+/// Prepara a direção e rotação da bala para o inimigo que o radar pegou
+/// </summary>
 [BurstCompile]
 [UpdateInGroup(typeof(VariableRateSimulationSystemGroup))]
 public partial struct AttackSystem : ISystem
@@ -33,16 +36,24 @@ public partial struct AttackSystem : ISystem
 
         var job = new ApplyDamageJob
         {
-            Ecb = ecb,
+#if MAINTHREAD
+            SingleEcb = ecb,
+#else
+            Ecb = ecb.AsParallelWriter(),
+#endif
             DeltaTime = SystemAPI.Time.DeltaTime,
             TransformLookup = globalTransformLookup,
             TankPropertiesLookup = tankPropertiesLookup
 
 
-        }.Schedule(state.Dependency);
+        };
 
-        state.Dependency = job;
-
+#if !MAINTHREAD
+        var handle = job.Schedule(state.Dependency);
+        state.Dependency = handle;
+#else
+        job.Run();
+#endif
         state.Dependency.Complete();
         ecb.Playback(state.EntityManager);
         ecb.Dispose();
@@ -52,11 +63,18 @@ public partial struct AttackSystem : ISystem
     public partial struct ApplyDamageJob : IJobEntity
     {
         public float DeltaTime;
-        public EntityCommandBuffer Ecb;
+#if MAINTHREAD
+        public EntityCommandBuffer SingleEcb;
+#else
+        public EntityCommandBuffer.ParallelWriter Ecb;
+#endif
+        [ReadOnly]
         public ComponentLookup<LocalToWorld> TransformLookup;
         [ReadOnly]
         public ComponentLookup<TankProperties> TankPropertiesLookup;
-        public void Execute(ApplyDamageAspect aspect)
+
+        //Itera sobre todos os tanques que tem um ataque ativo e um alvo a ser atacado
+        public void Execute(ApplyDamageAspect aspect, [ChunkIndexInQuery] int sortkey)
         {
             if (aspect.Timer > 0)
             {
@@ -64,24 +82,36 @@ public partial struct AttackSystem : ISystem
                 return;
             }
 
-            var bullet = Ecb.Instantiate(aspect.Properties.BulletPrefab);
+            //Instanciando bala
+#if MAINTHREAD
+            var bullet = SingleEcb.Instantiate(aspect.Properties.BulletPrefab);
+#else
+            var bullet = Ecb.Instantiate(sortkey, aspect.Properties.BulletPrefab);
+#endif
+            //De onde a bala vai sair
             var firepointTransform = TransformLookup.GetRefRO(aspect.Properties.FirePoint);
 
+            //Posição do inimigo (centro)
             var enemyProperties = TankPropertiesLookup.GetRefRO(aspect.TargetEntity);
             var enemyTransform = TransformLookup.GetRefRO(enemyProperties.ValueRO.Center);
 
+            //Apontando a bala para o inimigo
             var rot = TransformHelpers.LookAtRotation(firepointTransform.ValueRO.Position, enemyTransform.ValueRO.Position, math.up());
-
             var comp = new LocalTransform
             {
                 Position = firepointTransform.ValueRO.Position,
                 Rotation = rot,
                 Scale = 1f
             };
-
-            Ecb.SetComponent(bullet, comp);
-
+#if MAINTHREAD
+            SingleEcb.SetComponent(bullet, comp);
+#else
+            Ecb.SetComponent(sortkey, bullet, comp);
+#endif
+            //Reiniciando cronometro (aplicando cadencia)
             aspect.Timer = aspect.BaseProperties.Delay;
+
+            ///A bala vai sair (transaladar) por outro sistema)
         }
     }
 }

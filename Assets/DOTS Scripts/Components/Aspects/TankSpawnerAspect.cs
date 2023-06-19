@@ -9,6 +9,10 @@ public readonly partial struct TankSpawnerAspect : IAspect
     public readonly RefRO<LocalTransform> LocalTransform;
     public readonly DynamicBuffer<TankSpawnerRateBuffer> TankRates;
     public readonly RefRW<RandomGenerator> Random;
+
+    /// <summary>
+    /// Obtém um número referente a se as dimensões de spawn estão invertidas (negativas)
+    /// </summary>
     public (float x, float y) Coeficients
     {
         get
@@ -24,6 +28,7 @@ public readonly partial struct TankSpawnerAspect : IAspect
 
     public int MaxZTanks
         => (int)math.trunc(math.abs(Spawner.ValueRO.Start.y - Spawner.ValueRO.End.y) / Spawner.ValueRO.BlockSize.y);
+
     public float3 TankSpawnEuler => new float3(0f, Spawner.ValueRO.Orientation, 0f);
 
 }

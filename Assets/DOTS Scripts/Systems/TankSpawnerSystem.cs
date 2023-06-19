@@ -5,12 +5,15 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
+/// <summary>
+/// Spawna os tanque vermelhos e verdes de cada vez
+/// </summary>
+
 [BurstCompile, UpdateInGroup(typeof(InitializationSystemGroup))]
 public partial struct TankSpawnerSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
     {
-        //Debug.unityLogger.logEnabled = false;
         state.RequireForUpdate<TankSpawner>();
 
     }
@@ -27,20 +30,24 @@ public partial struct TankSpawnerSystem : ISystem
             var singleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
             var ecb = singleton.CreateCommandBuffer(state.WorldUnmanaged);
 
-            new TankSpawnerPointsJob
+            var job = new TankSpawnerPointsJob
             {
                 Team = teamToSpawn,
-                Ecb = ecb,
+#if MAINTHREAD
+                SingleEcb = ecb,
+#else
+                Ecb = ecb.AsParallelWriter(),
+#endif
 
 
-            }.Schedule();
 
-            //new TankSpawnerPointsJob
-            //{
-            //    Team = teamToSpawn,
-            //    Ecb = ecb.AsParallelWriter(),
+            };
 
-            //}.ScheduleParallel();
+#if MAINTHREAD
+            job.Run();
+#else
+            job.Schedule();
+#endif
         }
     }
 
@@ -49,8 +56,10 @@ public partial struct TankSpawnerSystem : ISystem
 [BurstCompile]
 public partial struct TankSpawnerPointsJob : IJobEntity
 {
-    public EntityCommandBuffer Ecb;
+    public EntityCommandBuffer.ParallelWriter Ecb;
+    public EntityCommandBuffer SingleEcb;
     public Team Team;
+
 
     public int CalcWeightSum(in TankSpawnerAspect aspect)
     {
@@ -62,34 +71,41 @@ public partial struct TankSpawnerPointsJob : IJobEntity
         return count;
     }
 
-    public void Execute(TankSpawnerAspect spawn)
+    public void Execute(TankSpawnerAspect spawn, [ChunkIndexInQuery] int sortkey)
     {
         if (spawn.Spawner.ValueRO.Team != Team)
             return;
 
+        //Número maximo de tanques
         var size = spawn.MaxXTanks * spawn.MaxZTanks;
+        //Peso total de todos os tipos de tanques
         var fullWeight = CalcWeightSum(in spawn);
-        var flatIdx = 0;
+
         var coeficients = spawn.Coeficients;
+
+        //lista de todos os tanques a se spawnar
         var list = new NativeList<Entity>(size, Allocator.Temp);
         var origin = spawn.LocalTransform.ValueRO.Position;
         var blockSize = spawn.Spawner.ValueRO.BlockSize;
         for (int i = 0; i < spawn.TankRates.Length; i++)
         {
+            //Quantidade total de tanques de um certo tipo
             var total = spawn.TankRates[i].GetTotalFrom(size, fullWeight);
             for (int j = 0; j < total; j++)
             {
+                //Adicioanndo tanque do tipo
                 list.Add(spawn.TankRates[i].Prefab);
-                if (list.Length == list.Capacity)
-                    goto RandomizeList;
+                if (list.Length == list.Capacity) //Quantidade de tanques atingido
+                    goto RandomizeList; //Saindo dos laços
 
             }
         }
 
+        //Randomizando a posição dos tanques
     RandomizeList:
         spawn.Random.ValueRW.Value.Shuffle(ref list);
 
-        flatIdx = 0;
+        var flatIdx = 0;
         for (int i = 0; i < spawn.MaxXTanks; i++)
         {
             for (int z = 0; z < spawn.MaxZTanks; z++)
@@ -97,8 +113,11 @@ public partial struct TankSpawnerPointsJob : IJobEntity
                 var prefab = list[flatIdx++];
 
 
-
-                var newTank = Ecb.Instantiate(prefab);
+#if MAINTHREAD
+                var newTank = SingleEcb.Instantiate(prefab);
+#else
+                var newTank = Ecb.Instantiate(sortkey, prefab);
+#endif
                 var position = new float3
                 {
                     x = origin.x + i * blockSize.x * coeficients.x,
@@ -106,7 +125,11 @@ public partial struct TankSpawnerPointsJob : IJobEntity
                     z = origin.z + z * blockSize.y * coeficients.y,
                 };
 
-                Ecb.SetComponent<LocalTransform>(newTank, new LocalTransform
+#if MAINTHREAD
+                SingleEcb.SetComponent<LocalTransform>(newTank, new LocalTransform
+#else
+                Ecb.SetComponent<LocalTransform>(sortkey, newTank, new LocalTransform
+#endif
                 {
                     Position = position,
                     Rotation = quaternion.EulerXYZ(spawn.TankSpawnEuler),
@@ -116,62 +139,25 @@ public partial struct TankSpawnerPointsJob : IJobEntity
 
 
                 if (spawn.Spawner.ValueRO.Team == Team.Green)
-                    Ecb.AddComponent(newTank, new GreenTeamTag());
+                {
+
+#if MAINTHREAD
+                    SingleEcb.AddComponent(newTank, new GreenTeamTag());
+#else
+                    Ecb.AddComponent(sortkey, newTank, new GreenTeamTag());
+#endif
+                }
                 else
-                    Ecb.AddComponent(newTank, new RedTeamTag());
+                {
+#if MAINTHREAD
+                    SingleEcb.AddComponent(newTank, new RedTeamTag());
+#else
+                    Ecb.AddComponent(sortkey, newTank, new RedTeamTag());
+#endif
+                }
+
             }
         }
     }
 }
-
-
-
-//[BurstCompile]
-//public partial struct TankSpawnerPointsJob : IJobEntity
-//{
-//    public EntityCommandBuffer.ParallelWriter Ecb;
-//    public Team Team;
-//    //public NativeReference <int> MaxTanks;
-//    public void Execute(TankSpawnerAspect spawnerAspect, [ChunkIndexInQuery] int sortKey )
-//    {
-//        if (spawnerAspect.Spawner.ValueRO.Team != Team)
-//            return;
-
-//        float2 BlockSize = spawnerAspect.Spawner.ValueRO.BlockSize;
-//        float2 Limits = new float2(spawnerAspect.MaxXTanks, spawnerAspect.MaxZTanks);
-
-//        var maxTanks = spawnerAspect.MaxZTanks * spawnerAspect.MaxXTanks;
-
-//        var originFieldPosition = spawnerAspect.LocalTransform.ValueRO.Position;
-//        //Debug.Log($"Limits {Limits}");
-
-//        for (int count = 0; count < maxTanks; count++)
-//        {
-//            var zPosition = originFieldPosition.z + BlockSize.y * math.trunc(count / Limits.x);
-//            var xPosition = originFieldPosition.x + BlockSize.x * (count % Limits.x);
-
-//            var position = new float3(xPosition, 0, zPosition);
-//            var newTank = Ecb.Instantiate(sortKey, spawnerAspect.Spawner.ValueRO.ChosenTank);
-
-//            Ecb.AddComponent<AliveTankTag>(sortKey, newTank);
-//            Ecb.SetComponent(sortKey, newTank, new LocalTransform
-//            {
-//                Position = position,
-//                Rotation = quaternion.EulerXYZ(spawnerAspect.TankSpawnEuler),
-//                Scale = 1f
-
-//            });
-
-
-
-
-//            if (spawnerAspect.Spawner.ValueRO.Team == Team.Green)
-//                Ecb.AddComponent(sortKey, newTank, new GreenTeamTag());
-//            else
-//                Ecb.AddComponent(sortKey, newTank, new RedTeamTag());
-
-//        }
-
-//    }
-//}
 
