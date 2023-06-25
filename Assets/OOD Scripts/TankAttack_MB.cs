@@ -7,6 +7,7 @@ public class TankAttack_MB : MonoBehaviour
 
     public int Precision = 3;
     public float RadarDelay = 1f;
+    public float RadarCount = 0f;
     public Tank_MB Tank;
     public bool Start;
     public Weapon_MB Weapon;
@@ -14,7 +15,6 @@ public class TankAttack_MB : MonoBehaviour
 
     private Tank_MB targetedEnemy;
     private Unity.Mathematics.Random random;
-    private float radarCount = 0f;
     private float attackCount;
 
 
@@ -55,7 +55,7 @@ public class TankAttack_MB : MonoBehaviour
     private void Awake()
     {
         random = new Unity.Mathematics.Random((uint)System.DateTime.Now.Ticks);
-        radarCount = random.NextFloat(0f, RadarDelay);
+        RadarCount = random.NextFloat(0f, RadarDelay);
         attackCount = random.NextFloat(0f, Tank.Stats.ShootDelay);
     }
 
@@ -72,8 +72,8 @@ public class TankAttack_MB : MonoBehaviour
         if (!Start)
             return;
 
-        if (radarCount > 0f)
-            radarCount -= Time.deltaTime;
+        if (RadarCount > 0f)
+            RadarCount -= Time.deltaTime;
 
         if (attackCount > 0f)
             attackCount -= Time.deltaTime;
@@ -81,7 +81,7 @@ public class TankAttack_MB : MonoBehaviour
         if (targetedEnemy && attackCount <= 0f)
             Weapon.TryFire();
 
-        if (targetedEnemy == null && radarCount <= 0f)
+        if (targetedEnemy == null && RadarCount <= 0f)
         {
             var enemy = FoundEnemy();
             if (enemy != null)
@@ -109,7 +109,7 @@ public class TankAttack_MB : MonoBehaviour
         var enemies = ClosestEnemies(fields);
         if (enemies.Count == 0)
             return null;
-        radarCount = RadarDelay;
+        RadarCount = RadarDelay;
 
 
 

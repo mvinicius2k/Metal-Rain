@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class SpawnField_MB : MonoBehaviour
 {
+    //Usado para os tanque não atirarem todos ao mesmo tempo
+    public const float RadarRandomCeil = 2f;
 
     public Vector2 BlockSize, StartAt, EndAt;
     public SpawnRate[] SpawnRates;
@@ -102,6 +104,7 @@ public class SpawnField_MB : MonoBehaviour
                 };
                 newTank.transform.eulerAngles = new Vector3(0f, Orientation, 0f);
                 var tankMb = newTank.GetComponent<Tank_MB>();
+                tankMb.Attack.RadarCount = Random.NextFloat(0f,RadarRandomCeil);
                 tankMb.Dependencies(this);
                 tankMb.OnDead.AddListener((tank) => SpawnFieldManager_MB.Instance.TanksProperties[Team].DeadCount++);
                 tanks.Add(tankMb);
